@@ -14,7 +14,7 @@ import {
   updateMcpClient,
 } from '../../../src/modules/ai/resources';
 import { employeeToFormState, formStateToValues } from '../../../src/modules/ai/pages/EmployeeConfigPage';
-import { filterEmployeesByKeyword, redactEmployee } from '../../../src/modules/ai/pages/EmployeeDirectoryPage';
+import { filterEmployeesByKeyword, filterUsableEmployees, matchesEmployeeStatus, redactEmployee } from '../../../src/modules/ai/pages/EmployeeDirectoryPage';
 import { buildWorkContext } from '../../../src/modules/ai/pages/ConversationsPage';
 import { maskUrl, redactMap } from '../../../src/modules/ai/pages/McpPage';
 import type { AiEmployeeRow } from '../../../src/modules/ai/types';
@@ -92,6 +92,41 @@ describe('AI-01 可使用列表的本地过滤', () => {
   it('空关键词原样返回；无命中返回空数组（不是全部）', () => {
     expect(filterEmployeesByKeyword(rows, '   ')).toHaveLength(3);
     expect(filterEmployeesByKeyword(rows, '不存在的人')).toEqual([]);
+  });
+});
+
+describe('AI-01 顶部启用状态筛选（三态，只用 enabled 字段）', () => {
+  const rows: AiEmployeeRow[] = [
+    { username: 'enabled-a', enabled: true },
+    { username: 'disabled-b', enabled: false },
+    // 字段缺失：与卡片/既有约定一致，视为已启用（不推断"在线"）。
+    { username: 'missing-c' },
+  ];
+
+  it('全部状态不过滤，已启用/已停用只按 enabled 判定', () => {
+    expect(rows.filter((row) => matchesEmployeeStatus(row, 'all'))).toHaveLength(3);
+    expect(rows.filter((row) => matchesEmployeeStatus(row, 'enabled')).map((row) => row.username)).toEqual([
+      'enabled-a',
+      'missing-c',
+    ]);
+    expect(rows.filter((row) => matchesEmployeeStatus(row, 'disabled')).map((row) => row.username)).toEqual([
+      'disabled-b',
+    ]);
+  });
+
+  it('「可使用」本地筛选是关键词 + 状态的交集，且不改变入参集合', () => {
+    const source: AiEmployeeRow[] = [
+      { username: 'trade-manager', nickname: '贸易经理', enabled: true },
+      { username: 'old-trader', nickname: '贸易停用', enabled: false },
+    ];
+    expect(filterUsableEmployees(source, '贸易', 'all').map((row) => row.username)).toEqual([
+      'trade-manager',
+      'old-trader',
+    ]);
+    expect(filterUsableEmployees(source, '贸易', 'enabled').map((row) => row.username)).toEqual(['trade-manager']);
+    expect(filterUsableEmployees(source, '贸易', 'disabled').map((row) => row.username)).toEqual(['old-trader']);
+    // 纯函数：不修改调用方数组。
+    expect(source).toHaveLength(2);
   });
 });
 
