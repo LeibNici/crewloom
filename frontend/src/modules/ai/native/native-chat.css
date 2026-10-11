@@ -1,0 +1,87 @@
+/*
+ * AI-03 原生会话宿主的布局适配（只在宿主挂载时生效）。
+ *
+ * 为什么需要这一层（根因，固定 2.2.22 源码）：
+ *  上游 `ChatBoxLayout` 把聊天面板实现成"右下角固定浮层 + 整体页面让位"：
+ *  `ChatBoxLayout.tsx:117-140` 在 `open && !expanded && !isMobileLayout` 时注入
+ *  `html { padding-left: 450px }` / `html body { position: relative; overflow: hidden;
+ *  transform: translateX(-450px) }`，面板本身是 `position: fixed; right: -450px; width: 450px`。
+ *  它依赖 NocoBase 管理壳里的 admin layout model 提供 `isMobileLayout`；本产品不渲染管理壳，
+ *  该 hook 永远返回 false，于是这套"让位 450px"的逻辑在任何视口都会执行。
+ *  在 390px 视口上：页面被强制让出 450px，面板从 x≈320 起向右溢出，输入/发送/员工/模型/附件
+ *  大部分在屏幕外（报告 16 §1 的窄屏截图与 `task-status.md` 的纠正记录）。
+ *
+ * 本文件的处理是**纯布局适配**，不改上游组件与聊天逻辑：
+ *  1. 只在 `html.crewloom-native-chat` 时抵消上游注入的全局让位样式（不用 !important 会影响其它页面）；
+ *  2. 把上游的浮层面板改回"占满本产品给它的容器"，因此桌面与窄屏都落在页面内容区里；
+ *  3. 窄屏下让 Sender 底部控件换行，避免横向滚动。
+ */
+
+html.crewloom-native-chat {
+  padding-left: 0 !important;
+}
+
+html.crewloom-native-chat body {
+  position: static !important;
+  overflow: auto !important;
+  transform: none !important;
+}
+
+[data-testid='native-chatbox-frame'] {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  height: clamp(420px, calc(100vh - 220px), 900px);
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(5, 5, 5, 0.06);
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* 上游 ChatBoxWrapper 的浮层：在宿主里改为占满容器（桌面与窄屏一致）。 */
+[data-testid='native-chatbox-frame'] > div[role='dialog'] {
+  position: relative !important;
+  inset: auto !important;
+  right: auto !important;
+  left: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  border-inline-start: none !important;
+  z-index: auto !important;
+}
+
+/* 展开态的 Card 同样落在容器内，而不是 95% 居中浮层。 */
+[data-testid='native-chatbox-frame'] > .ant-card[role='dialog'] {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+}
+
+[data-testid='native-chatbox-frame'] > .ant-card[role='dialog'] > .ant-card-body {
+  height: 100%;
+  padding: 0;
+}
+
+/* 窄屏：底部工具栏换行，控件不撑出容器。 */
+[data-testid='native-chatbox-frame'] footer,
+[data-testid='native-chatbox-frame'] footer .ant-flex {
+  max-width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+[data-testid='native-chatbox-frame'] .ant-sender {
+  max-width: 100%;
+  min-width: 0;
+}

@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-10-10T22:21:42.070Z",
+  "package": "@nocobase/plugin-departments@2.2.20",
+  "tarballUrl": "https://registry.npmjs.org/@nocobase/plugin-departments/-/plugin-departments-2.2.20.tgz",
+  "tarballSha256": "d5a0f287f8586601c71c15651f7034f30899d579204f1b268ab3932c240bf31a",
+  "patchFile": "department-compat-2.2.20.patch",
+  "patchSha256": "7e5b2b7e2daca137b42b01e17cc0b17177f5e4997e6c36387f0a983b1ce8a3f2",
+  "patchBytes": 2500,
+  "files": {
+    "package/dist/server/middlewares/reset-user-departments-cache.js": {
+      "key": "cacheMiddleware",
+      "pristineSha256": "e0c83d50c248ce8ce1caef11a650d1305c3ca075459b66108b5e66550d1372ca",
+      "patchedSha256": "c2abd4d7c3ce8ebafa424f13fb720761fc5fdf5ad0f3593efc3509fd87b9909c"
+    }
+  },
+  "observedFiles": {
+    "package/dist/server/middlewares/set-departments-roles.js": {
+      "key": "setRolesMiddleware",
+      "pristineSha256": "47a1aeba5a3575e1a44077ffc988c098079fd383b8ca1b9637552b8df34111ab",
+      "untouched": true
+    },
+    "package/dist/server/plugin.js": {
+      "key": "plugin",
+      "pristineSha256": "f2eb7333096e387a19021632a627f9fd9e40c9e4b2f22ad9e791918ff56fed30",
+      "untouched": true
+    },
+    "package/dist/server/collections/departments.js": {
+      "key": "departmentsCollection",
+      "pristineSha256": "379fc5e7adfbabdf9fa588f188abfba0ecc0d01679b0b253e29d9ed6cda1a7ff",
+      "untouched": true
+    },
+    "package/dist/server/collections/departmentsUsers.js": {
+      "key": "departmentsUsersCollection",
+      "pristineSha256": "10b7e6bb07fb821f51a7630b466236633b4f5e3873dc365e90e1fcb8b67fcce2",
+      "untouched": true
+    },
+    "package/dist/server/collections/departmentRoles.js": {
+      "key": "departmentRolesCollection",
+      "pristineSha256": "3e8d4c8ee587964d24377a058ab0972f48a08a762b29bfa84d994fbfbb38ca93",
+      "untouched": true
+    },
+    "package/dist/server/collections/users.js": {
+      "key": "usersCollection",
+      "pristineSha256": "441047f647437769a9be95d3acb0c399f471db05602f74196086e054a77e7fd7",
+      "untouched": true
+    },
+    "package/dist/server/collections/roles.js": {
+      "key": "rolesCollection",
+      "pristineSha256": "768a3382ad23a2b7898ea4fc0ab0bae6178edde99b8dcab04cd3a7aaade18938",
+      "untouched": true
+    }
+  }
+}

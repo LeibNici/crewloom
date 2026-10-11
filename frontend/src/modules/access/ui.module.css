@@ -1,0 +1,591 @@
+/* 组 B 本地样式（access + datasource 页面共用；非公共设计系统，不对外发布）。 */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  color: var(--ink-2);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.tab:hover {
+  background: var(--surface-muted);
+}
+
+.tabActive {
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+
+.tabDisabled {
+  color: var(--ink-4);
+  cursor: not-allowed;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.toolbarGrow {
+  flex: 1 1 220px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button:hover:not(:disabled) {
+  border-color: var(--brand);
+  color: var(--brand-deep);
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.buttonPrimary {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+
+.buttonPrimary:hover:not(:disabled) {
+  border-color: var(--brand-hover);
+  background: var(--brand-hover);
+  color: #fff;
+}
+
+.buttonDanger {
+  border-color: #f2c8c3;
+  color: var(--danger);
+}
+
+.buttonDanger:hover:not(:disabled) {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.buttonLink {
+  height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--brand-deep);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.table th {
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--surface-muted);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-3);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+  vertical-align: top;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-muted);
+}
+
+.table tbody tr[data-clickable='true'] {
+  cursor: pointer;
+}
+
+.rowActive {
+  background: var(--brand-soft);
+}
+
+.cellMono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  word-break: break-all;
+}
+
+.cellMuted {
+  color: var(--ink-4);
+}
+
+.ellipsis {
+  display: inline-block;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.required::after {
+  content: ' *';
+  color: var(--danger);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.textarea {
+  min-height: 72px;
+  resize: vertical;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.formGridFull {
+  grid-column: 1 / -1;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 6vh 16px;
+  background: rgba(15, 23, 42, 0.28);
+  overflow-y: auto;
+}
+
+.modal {
+  width: 100%;
+  max-width: 620px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 20px 22px;
+}
+
+.modalWide {
+  max-width: 900px;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 640;
+  color: var(--ink);
+}
+
+.modalDescription {
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.bannerInfo {
+  border-color: #cfe0ff;
+  background: var(--brand-soft);
+}
+
+.bannerOk {
+  border-color: #b7e4c7;
+  background: var(--ok-soft);
+  color: #14532d;
+}
+
+.bannerWarn {
+  border-color: #f2d9a8;
+  background: var(--warn-soft);
+  color: #7c4a03;
+}
+
+.bannerDanger {
+  border-color: #f2c8c3;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.stateBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 18px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-muted);
+}
+
+.stateTitle {
+  font-size: 14px;
+  font-weight: 620;
+  color: var(--ink);
+}
+
+.stateText {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: 12.5px;
+}
+
+.chipMuted {
+  background: var(--surface-muted);
+  color: var(--ink-3);
+}
+
+.chipRemove {
+  border: none;
+  background: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.codeBlock {
+  max-height: 260px;
+  overflow: auto;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px 18px;
+}
+
+.metaRow {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.metaTerm {
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.metaValue {
+  color: var(--ink);
+  word-break: break-all;
+}
+
+.splitLayout {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .splitLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.listButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.listButton {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.listButton:hover {
+  background: var(--surface-muted);
+}
+
+.listButtonActive {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+}
+
+.listButtonTitle {
+  font-weight: 600;
+}
+
+.listButtonHint {
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.conditionRow {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(110px, 0.8fr) minmax(140px, 1.2fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.treeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+.treeRow:hover {
+  background: var(--surface-muted);
+}
+
+.treeToggle {
+  width: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--ink-3);
+}
+
+.treeTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.treeMeta {
+  color: var(--ink-4);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.treeActions {
+  display: flex;
+  gap: 6px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  background: var(--surface-muted);
+}
+
+.tileLabel {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.tileValue {
+  font-size: 20px;
+  font-weight: 660;
+  color: var(--ink);
+}
+
+.tileHint {
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+.toolList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.toolRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+}
+
+.notice {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.actionsCell {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* AC-01：用户列表里的头像缩略图（真实 users.avatar 附件地址）。 */
+.avatarThumb {
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+  background: var(--surface-muted);
+}

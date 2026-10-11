@@ -1,0 +1,48 @@
+{
+  "module": "ai",
+  "owner": "组 A（AI + LM）",
+  "readActions": [
+    "aiEmployees:list",
+    "aiEmployees:listByUser",
+    "aiEmployees:get",
+    "aiConversations:list",
+    "aiConversations:get",
+    "aiConversations:getMessages",
+    "aiTools:list",
+    "aiTools:listBinding",
+    "aiSkills:list",
+    "aiSkills:listBinding",
+    "aiMcpClients:list",
+    "aiMcpClients:get",
+    "aiContextDatasources:list",
+    "aiContextDatasources:get",
+    "ai:listLLMServices"
+  ],
+  "readPostActions": [
+    "aiContextDatasources:preview"
+  ],
+  "productActions": [
+    "aiEmployees:create",
+    "aiEmployees:update",
+    "aiConversations:create",
+    "aiConversations:sendMessages",
+    "aiConversations:resendMessages",
+    "aiConversations:abort",
+    "aiConversations:resumeStream",
+    "aiConversations:resumeToolCall",
+    "aiConversations:updateUserDecision",
+    "aiConversations:updateToolArgs",
+    "aiContextDatasources:create",
+    "aiContextDatasources:update",
+    "aiContextDatasources:destroy",
+    "aiMcpClients:create",
+    "aiMcpClients:update",
+    "aiMcpClients:destroy",
+    "aiMcpClients:testConnection",
+    "aiMcpClients:listTools",
+    "aiMcpClients:rebuildClient",
+    "aiMcpClients:updateToolPermission",
+    "attachments:upload"
+  ],
+  "notes": "readActions 供 strict 模式只读联调使用；aiContextDatasources:preview 登记在 readPostActions：它在 2.2.20 的真实契约是 POST + 查询体（服务端读 ctx.action.params.values，GET 会拿到空 options 静默返回空预览），但语义仍是一次受 ACL 约束的 repository.find，没有任何写入分支。strict 模式只在该动作满足“查询体校验”（datasource/collectionName 字符串 + 仅允许查询字段，见 src/api/policy.ts:validatePreviewQueryBody）时按只读放行 POST；其它 POST 与所有写入动作仍默认拦截。getMessages 的 updateRead=true 会在服务端标记已读，仍按写副作用拦截。productActions 是真实用户在产品内可主动触发的动作（会话发送/续流/工具确认、上下文数据源 CRUD、MCP 连接测试与取工具等），strict 模式一律拦截，不做自动验证。自动验证的 history 读取一律显式 updateRead=false（浏览器侧另有 agentReadGuard 强制改写）。"
+}

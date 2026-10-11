@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crewloom 本机合成工作流/模型验收环境 · 控制页（5410）</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font: 14px/1.55 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: #16202c; background: #f5f7fa; }
+      header { background: #16202c; color: #fff; padding: 16px 22px; }
+      header h1 { margin: 0 0 4px; font-size: 17px; }
+      header p { margin: 0; font-size: 12px; color: #b8c4d4; }
+      main { padding: 16px 22px 60px; max-width: 1280px; }
+      section { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+      h2 { margin: 0 0 10px; font-size: 15px; }
+      h3 { margin: 14px 0 6px; font-size: 13px; color: #475569; }
+      table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+      th, td { border-bottom: 1px solid #edf1f6; padding: 5px 7px; text-align: left; vertical-align: top; }
+      th { color: #64748b; font-weight: 600; background: #fafbfd; }
+      code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+      button, select, input { font: inherit; }
+      button { background: #1d4ed8; color: #fff; border: 0; border-radius: 6px; padding: 5px 11px; cursor: pointer; font-size: 12.5px; margin: 0 4px 4px 0; }
+      button.ghost { background: #eef2f7; color: #1e293b; }
+      button.warn { background: #b45309; }
+      button.danger { background: #b91c1c; }
+      button:disabled { opacity: .5; cursor: not-allowed; }
+      .row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+      .kv { font-size: 12.5px; color: #334155; }
+      .kv b { color: #0f172a; }
+      .pill { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: 11.5px; background: #e2e8f0; color: #334155; }
+      .pill.ok { background: #dcfce7; color: #166534; }
+      .pill.warn { background: #fef3c7; color: #92400e; }
+      .pill.bad { background: #fee2e2; color: #991b1b; }
+      .muted { color: #64748b; font-size: 12px; }
+      .scroll { max-height: 300px; overflow: auto; }
+      .note { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 8px 10px; font-size: 12.5px; color: #334155; }
+      ol.steps { margin: 6px 0 0 18px; padding: 0; font-size: 12.5px; }
+      ol.steps li { margin-bottom: 3px; }
+      @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Crewloom 本机合成工作流 / 模型验收环境 · 控制页</h1>
+      <p>
+        本页是<strong>测试工具</strong>，不是产品界面。所有按钮只操作本机 5410 的合成数据；
+        本进程不对外发起任何请求；未支持的接口只在本机 501；<code>/files</code> 只在本机 404。
+      </p>
+    </header>
+    <main>
+      <section>
+        <h2>1. 环境与入口</h2>
+        <div class="row">
+          <span class="kv">本机合成后端：<b id="serverUrl">-</b></span>
+          <span class="kv">产品预览：<b id="appUrl">-</b></span>
+          <span class="kv">令牌世代（会话）：<b id="tokenEpoch">-</b></span>
+          <span class="kv">节点自测场景：<b id="wfScenario">-</b></span>
+          <span class="kv">试飞场景：<b id="lmScenario">-</b></span>
+        </div>
+        <h3>产品入口（新标签打开，均为真实产品页面）</h3>
+        <div class="row" id="pages"></div>
+        <h3>合成账号（公开 fixture，仅在本机 5410 有效）</h3>
+        <table id="accounts"></table>
+      </section>
+
+      <section>
+        <h2>2. 工作流受控数据（WF-01..05）</h2>
+        <div class="note">
+          版本、节点、执行记录全部在本机内存里；写入动作只改本进程内存，绝不落真实 13000。
+          「已执行版本」用 <code>versionStats.executed &gt; 0</code> 触发真实契约里的 400 限制。
+        </div>
+        <table id="wfVersions"></table>
+        <h3>执行记录（覆盖真实 9 态里的代表值）</h3>
+        <table id="wfExecutions" class="scroll"></table>
+        <h3>流程分类（<code>workflowCategories:list</code>）</h3>
+        <table id="wfCategories"></table>
+        <h3>操作</h3>
+        <div class="row">
+          <button class="ghost" id="wfResetBtn">重置工作流合成数据</button>
+          <button class="ghost" data-scenario="success">自测场景：成功</button>
+          <button class="ghost" data-scenario="failure">自测场景：失败</button>
+          <button class="ghost" data-scenario="permission">自测场景：无权限</button>
+          <button class="ghost" data-scenario="error">自测场景：内部错误</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. 模型配置合成数据（LM-01..05）</h2>
+        <div class="note">
+          <code>llmServices:list|get</code> 按真实契约返回<strong>明文 options</strong>（读—改—写整体替换所需），
+          <code>ai:listLLMServices</code> 按真实契约<strong>剔除 options</strong> 并隐藏停用服务。
+          本页<strong>只显示 options 的键名</strong>，不显示任何值——与产品 UI 的边界一致。
+          <code>ai:testFlight</code> / <code>ai:listModels</code> / <code>ai:listProviderModels</code>
+          在本机应答，<strong>不会外呼任何提供方，也不产生任何费用</strong>。
+        </div>
+        <table id="lmServices"></table>
+        <h3>默认设置（<code>aiSettings</code>）</h3>
+        <table id="lmSettings"></table>
+        <h3>员工模型配置（LM-04 只读关联）</h3>
+        <table id="lmEmployees"></table>
+        <h3>操作</h3>
+        <div class="row">
+          <button class="ghost" id="lmResetBtn">重置模型合成数据</button>
+          <button class="ghost" data-flight="success">试飞场景：成功</button>
+          <button class="ghost" data-flight="failure">试飞场景：失败</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. 会话与重置</h2>
+        <div class="row">
+          <button class="ghost" id="tokenEpochBtn">令牌世代 +1（旧会话立即 401，需要重新登录）</button>
+          <button class="warn" id="resetBtn">重置合成数据（不清令牌）</button>
+          <button class="danger" id="resetAllBtn">重置数据并重新登录（令牌世代 +1）</button>
+          <button id="refreshBtn">刷新状态</button>
+        </div>
+        <p class="muted">「未登录就是未登录」：没有有效合成令牌时，非公开动作返回 401 <code>EMPTY_TOKEN</code>；令牌世代变更后旧令牌返回 401 <code>EXPIRED_TOKEN</code>。</p>
+      </section>
+
+      <section>
+        <h2>5. 最近请求（真实页面点了什么就会出现在这里）</h2>
+        <table id="requests" class="scroll"></table>
+      </section>
+
+      <section>
+        <h2>6. 本机未支持的接口（501，绝不外呼、绝不空成功）</h2>
+        <table id="unsupported" class="scroll"></table>
+      </section>
+
+      <section>
+        <h2>7. 最近受控写（本机状态机的写入日志）</h2>
+        <table id="journal" class="scroll"></table>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      const post = (path, body) => fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body ?? {}) }).then((r) => r.json());
+      let state = null;
+      let appUrl = '';
+
+      function table(node, headers, rows) {
+        const head = headers ? `<thead><tr>${headers.map((h) => `<th>${esc(h)}</th>`).join('')}</tr></thead>` : '';
+        const body = rows.length
+          ? rows.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')
+          : `<tr><td colspan="${headers ? headers.length : 1}" class="muted">（空）</td></tr>`;
+        node.innerHTML = `${head}<tbody>${body}</tbody>`;
+      }
+
+      function openLinks() {
+        document.querySelectorAll('[data-open]').forEach((el) => {
+          el.onclick = () => window.open(appUrl + el.getAttribute('data-open'), '_blank');
+        });
+      }
+
+      function render() {
+        appUrl = state.appUrl;
+        $('serverUrl').textContent = state.serverUrl;
+        $('appUrl').textContent = state.appUrl;
+        $('tokenEpoch').textContent = state.tokenEpoch;
+        $('wfScenario').textContent = state.workflow.testScenario;
+        $('lmScenario').textContent = state.model.testScenario;
+
+        $('pages').innerHTML = state.pages.map((p) => `<button class="ghost" data-open="${esc(p.url.replace(appUrl, ''))}">${esc(p.label)}</button>`).join('');
+        table($('accounts'), ['账号', '口令', '身份', '说明'], state.accounts.map((a) => [
+          `<code>${esc(a.email)}</code>`, `<code>${esc(a.password)}</code>`, esc(a.nickname), esc(a.note ?? ''),
+        ]));
+
+        table($('wfVersions'), ['版本 id', 'key', '标题', 'current', 'enabled', '已执行', '节点数', '分类'], state.workflow.versions.map((v) => [
+          `<code>${esc(v.id)}</code>`, `<code>${esc(v.key)}</code>`, esc(v.title),
+          v.current ? '<span class="pill ok">是</span>' : '<span class="pill">否</span>',
+          v.enabled ? '<span class="pill ok">启用</span>' : '<span class="pill">停用</span>',
+          v.executed, v.nodeCount, esc(v.categories.join(',')) || '-',
+        ]));
+
+        table($('wfExecutions'), ['执行 id', '流程版本', 'status', '结束原因', 'job 数'], state.workflow.executions.map((e) => [
+          `<code>${esc(e.id)}</code>`, `<code>${esc(e.workflowId)}</code>`,
+          e.status === null ? '<span class="pill warn">null（排队中）</span>' : `<code>${e.status}</code>`,
+          esc(e.reason ?? '-'), e.jobCount,
+        ]));
+
+        table($('wfCategories'), ['id', '标题'], state.workflow.categories.map((c) => [`<code>${esc(c.id)}</code>`, esc(c.title)]));
+
+        table($('lmServices'), ['name', '标题', 'provider', 'enabled', 'options 键名（不显示值）', '显式模型', 'enabledModels 形状'], state.model.services.map((s) => [
+          `<code>${esc(s.name)}</code>`, esc(s.title), `<code>${esc(s.provider)}</code>`,
+          s.enabled ? '<span class="pill ok">启用</span>' : '<span class="pill">停用</span>',
+          `${s.optionKeys.map((k) => `<code>${esc(k)}</code>`).join(' ') || '<span class="muted">（无）</span>'}${s.hasApiKey ? ' <span class="muted">（含密钥，值不展示）</span>' : ''}`,
+          s.enabledModels.map((m) => `<code>${esc(m)}</code>`).join(' ') || '<span class="muted">（无）</span>',
+          `<code>${esc(s.enabledModelsShape)}</code>`,
+        ]));
+
+        table($('lmSettings'), ['键', '值'], Object.entries(state.model.settings).map(([k, v]) => [`<code>${esc(k)}</code>`, `<code>${esc(v === null ? 'null' : JSON.stringify(v))}</code>`]));
+
+        table($('lmEmployees'), ['username', '昵称', '启用专用限制', '允许模型', '首选'], state.model.employees.map((e) => [
+          `<code>${esc(e.username)}</code>`, esc(e.nickname), e.restricted ? '是' : '否',
+          e.models.map((m) => `<code>${esc(m)}</code>`).join(' ') || '-', esc(e.preferred ?? '-'),
+        ]));
+
+        table($('requests'), ['时间', '方法', '动作', '状态', '层', '备注'], (state.requests ?? []).map((r) => [
+          esc(String(r.at).slice(11, 19)), esc(r.method), `<code>${esc(r.action)}</code>`,
+          `<span class="pill ${r.code >= 400 ? 'bad' : 'ok'}">${r.code}</span>`, esc(r.layer ?? '-'), esc(r.note ?? ''),
+        ]));
+        table($('unsupported'), ['本机未支持的请求'], (state.unsupported ?? []).map((u) => [`<code>${esc(u)}</code>`]));
+
+        const journal = [...(state.workflow.journal ?? []), ...(state.model.journal ?? [])]
+          .sort((a, b) => String(a.at).localeCompare(String(b.at)))
+          .slice(-40)
+          .reverse();
+        table($('journal'), ['时间', '方法', '动作', '细节'], journal.map((j) => [
+          esc(String(j.at).slice(11, 19)), esc(j.method), `<code>${esc(j.action)}</code>`,
+          esc(JSON.stringify(Object.fromEntries(Object.entries(j).filter(([k]) => !['at', 'method', 'action'].includes(k))))).slice(0, 220),
+        ]));
+      }
+
+      async function refresh() {
+        state = await (await fetch('/control/state')).json();
+        render();
+        openLinks();
+      }
+
+      $('refreshBtn').onclick = refresh;
+      $('tokenEpochBtn').onclick = async () => { await post('/control/token-epoch'); refresh(); };
+      $('resetBtn').onclick = async () => { await post('/control/reset'); refresh(); };
+      $('resetAllBtn').onclick = async () => { await post('/control/reset-all'); refresh(); };
+      $('wfResetBtn').onclick = async () => { await post('/control/workflow/reset'); refresh(); };
+      $('lmResetBtn').onclick = async () => { await post('/control/model/reset'); refresh(); };
+      document.querySelectorAll('[data-scenario]').forEach((button) => {
+        button.onclick = async () => { await post('/control/workflow/scenario', { test: button.getAttribute('data-scenario') }); refresh(); };
+      });
+      document.querySelectorAll('[data-flight]').forEach((button) => {
+        button.onclick = async () => { await post('/control/model/scenario', { test: button.getAttribute('data-flight') }); refresh(); };
+      });
+
+      refresh();
+      setInterval(refresh, 5000);
+    </script>
+  </body>
+</html>

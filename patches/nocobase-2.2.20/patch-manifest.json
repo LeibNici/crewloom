@@ -1,0 +1,26 @@
+{
+  "generatedAt": "2026-10-10T22:01:57.895Z",
+  "package": "@nocobase/plugin-ai@2.2.20",
+  "tarballUrl": "https://registry.npmjs.org/@nocobase/plugin-ai/-/plugin-ai-2.2.20.tgz",
+  "tarballSha256": "3fb3be5d60c1c8d92dd36917b85449752c74552f983177a64deb613d3a44d16a",
+  "patchFile": "default-model-2.2.20.patch",
+  "patchSha256": "d6523c86bf24e9a570fd835b308fa21cde8acebfbbcf06f3e2689b33f3099ad4",
+  "patchBytes": 5060,
+  "files": {
+    "package/dist/server/manager/ai-manager.js": {
+      "key": "manager",
+      "pristineSha256": "6f62df6a9c228200e64f335d99cfcaac432b3fabc894cd25b7b6c46a8d22ede1",
+      "patchedSha256": "e0f9c886df76500ad5d6b87dbc0805128ed9b7f2823a8a852c8a6626a25e2f4a"
+    },
+    "package/dist/server/workflow/nodes/llm/index.js": {
+      "key": "llmNode",
+      "pristineSha256": "3f3a504412a0cdfb66a2058f29c919ff4b329d28d49c45f0bf0e7379a611803f",
+      "patchedSha256": "5f7450130b259282cfe79dd65439e6c5d5ea9aaf23e69710af02d91f126f5707"
+    },
+    "package/dist/ai/tools/sub-agents/dispatch-sub-agent-task.js": {
+      "key": "subAgent",
+      "pristineSha256": "95de43feb1c40c2b0bf9af252ce8c909f9cc1651943acf96ed90f617b23c26d7",
+      "patchedSha256": "77cdad06cdb13e6d88a9be18a7863e57cff19ea903a037e6b5011a1cca98eb58"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "module": "datasource",
+  "owner": "组 B（DS + AC）",
+  "readActions": [
+    "dataSources:get",
+    "dataSources:list",
+    "dataSources:listEnabled",
+    "mainDataSource:get",
+    "collections:get",
+    "fields:list",
+    "fields:get",
+    "roles:list",
+    "customers:list",
+    "items:list",
+    "suppliers:list",
+    "sales_orders:list",
+    "production_orders:list"
+  ],
+  "productActions": [
+    "dataSources:create",
+    "dataSources:update",
+    "dataSources:destroy",
+    "dataSources:testConnection",
+    "dataSources:readTables",
+    "dataSources:loadTables",
+    "mainDataSource:refresh",
+    "mainDataSource:syncFields",
+    "collections:create",
+    "collections:update",
+    "collections:destroy",
+    "fields:create",
+    "fields:update",
+    "fields:destroy",
+    "<collection>:create",
+    "<collection>:update",
+    "<collection>:destroy",
+    "<collection>:query"
+  ],
+  "notes": "readActions 供 strict 模式只读联调使用：dataSources / collections / fields 是元数据读取；customers / items / suppliers / sales_orders / production_orders 是 02-foundation 已抽样过的业务集合，仅用于真实只读抽样（GET）。",
+  "notesOnProductActions": "dataSources:readTables / loadTables / testConnection 会访问真实数据源（POST 但语义接近读取），loadTables 对 main 会写 collections 记录：strict 模式不在允许清单内，必须由真实用户在产品内主动触发。业务集合记录读写走 <collection>:create|update|destroy|query，由后端 ACL 判定。",
+  "notesOnParentPaths": "字段管理走父资源斜杠形式 collections/<name>/fields:<action>，策略按最后一段 resource:action 记为 fields:<action>；13000 实测 collections/<name>/fields:list 可用。"
+}

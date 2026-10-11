@@ -1,0 +1,107 @@
+--- a/dist/server/manager/ai-manager.js
++++ b/dist/server/manager/ai-manager.js
+@@ -68,6 +68,10 @@
+     if ((model == null ? void 0 : model.llmService) && (model == null ? void 0 : model.model)) {
+       return model;
+     }
++    const defaultModel = await this.resolveDefaultModel();
++    if (defaultModel) {
++      return defaultModel;
++    }
+     const services = await this.listAllEnabledModels();
+     const service = services.find((service2) => service2.enabledModels.length);
+     const firstModel = (_a = service == null ? void 0 : service.enabledModels[0]) == null ? void 0 : _a.value;
+@@ -79,6 +83,38 @@
+     }
+     throw new Error("LLM service not configured");
+   }
++  async resolveDefaultModel() {
++    const settings = await this.plugin.db.getRepository("aiSettings").findOne();
++    const rawService = (settings == null ? void 0 : settings.get) ? settings.get("defaultLLMService") : settings == null ? void 0 : settings.defaultLLMService;
++    const rawModel = (settings == null ? void 0 : settings.get) ? settings.get("defaultModel") : settings == null ? void 0 : settings.defaultModel;
++    const isSet = (value) => value != null && String(value).trim() !== "";
++    const serviceSet = isSet(rawService);
++    const modelSet = isSet(rawModel);
++    if (!serviceSet && !modelSet) {
++      return null;
++    }
++    if (!serviceSet || !modelSet) {
++      throw new Error("Default LLM service and default model must both be configured: the configured default is incomplete");
++    }
++    const llmService = String(rawService);
++    const model = String(rawModel);
++    const services = await this.plugin.db.getRepository("llmServices").find({ sort: "sort" });
++    const service = services.find((item) => ((item.get == null ? void 0 : item.get("name")) || item.name) === llmService);
++    if (!service) {
++      throw new Error('Default LLM service "' + llmService + '" is not available: service not found');
++    }
++    if (((service.get == null ? void 0 : service.get("enabled")) ?? service.enabled) === false) {
++      throw new Error('Default LLM service "' + llmService + '" is not available: service is disabled');
++    }
++    const enabledModels = this.getEnabledModels(service);
++    if (!enabledModels.length) {
++      throw new Error('Default LLM service "' + llmService + '" is not available: service has no enabled models');
++    }
++    if (!enabledModels.some((item) => item.value === model)) {
++      throw new Error('Default LLM model "' + model + '" is not available: model is not enabled on service "' + llmService + '"');
++    }
++    return { llmService, model };
++  }
+   toEnabledLLMService(service) {
+     var _a, _b, _c;
+     const provider = ((_a = service.get) == null ? void 0 : _a.call(service, "provider")) || service.provider;
+--- a/dist/server/workflow/nodes/llm/index.js
++++ b/dist/server/workflow/nodes/llm/index.js
+@@ -74,7 +74,16 @@
+     }
+     let provider;
+     try {
+-      provider = await this.getLLMProvider(llmService, modelOptions, {
++      let resolvedLLMService = llmService;
++      if (!resolvedLLMService) {
++        const plugin = this.workflow.app.pm.get("ai");
++        const defaultModel = await plugin.aiManager.resolveModel();
++        resolvedLLMService = defaultModel.llmService;
++        if (!modelOptions.model) {
++          modelOptions.model = defaultModel.model;
++        }
++      }
++      provider = await this.getLLMProvider(resolvedLLMService, modelOptions, {
+         sessionId: `workflow-${processor.execution.id}-${node.id}`
+       });
+     } catch (e) {
+--- a/dist/ai/tools/sub-agents/dispatch-sub-agent-task.js
++++ b/dist/ai/tools/sub-agents/dispatch-sub-agent-task.js
+@@ -34,6 +34,23 @@
+   mod
+ ));
+ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
++function extractExplicitModelRef(modelSettings) {
++  if (!modelSettings || typeof modelSettings !== "object") {
++    return null;
++  }
++  if (modelSettings.enabled !== true) {
++    return null;
++  }
++  const models = Array.isArray(modelSettings.models) ? modelSettings.models : [];
++  const first = models.find((item) => (item == null ? void 0 : item.llmService) && (item == null ? void 0 : item.model));
++  if (first) {
++    return { llmService: first.llmService, model: first.model };
++  }
++  if (modelSettings.llmService && modelSettings.model) {
++    return { llmService: modelSettings.llmService, model: modelSettings.model };
++  }
++  return null;
++}
+ var dispatch_sub_agent_task_exports = {};
+ __export(dispatch_sub_agent_task_exports, {
+   default: () => dispatch_sub_agent_task_default
+@@ -94,7 +111,7 @@
+       ctx,
+       sessionId: subSessionId,
+       employee,
+-      model: ((_h = (_g = (_f = ctx.action) == null ? void 0 : _f.params) == null ? void 0 : _g.values) == null ? void 0 : _h.model) ?? employee.get("modelSettings"),
++      model: ((_h = (_g = (_f = ctx.action) == null ? void 0 : _f.params) == null ? void 0 : _g.values) == null ? void 0 : _h.model) ?? extractExplicitModelRef(employee.get("modelSettings")),
+       question,
+       skillSettings,
+       writer

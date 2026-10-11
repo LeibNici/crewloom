@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>Crewloom</title>
+    <script>
+      // 浏览器没有 `process`，而固定源码的原生客户端闭包（经 Node 生态包，实测 picomatch）
+      // 在**模块求值期**就读 `process.platform`。ESM 的 import 先于入口模块正文执行，
+      // 因此垫片必须放在模块脚本之前。只补最小字段，不模拟 Node；已存在时不动。
+      if (!globalThis.process) {
+        globalThis.process = {
+          env: {},
+          platform: 'browser',
+          versions: {},
+          nextTick: function (callback) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            setTimeout(function () {
+              callback.apply(null, args);
+            }, 0);
+          },
+        };
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

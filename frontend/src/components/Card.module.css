@@ -1,0 +1,235 @@
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.cardMuted {
+  background: var(--surface-muted);
+  box-shadow: none;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.cardHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 15px;
+  font-weight: 620;
+  color: var(--ink);
+}
+
+.cardDescription {
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.cardBody {
+  padding: 16px 20px 18px;
+}
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.pageTitle {
+  font-size: 17px;
+  font-weight: 640;
+  color: var(--ink);
+}
+
+.pageDescription {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-2);
+  max-width: 78ch;
+}
+
+.pageMeta {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.pageActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  line-height: 1;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.pill_neutral {
+  background: #f1f5f9;
+  color: var(--ink-3);
+  border-color: #e2e8f0;
+}
+
+.pill_ok {
+  background: var(--ok-soft);
+  color: #067647;
+  border-color: #abefc6;
+}
+
+.pill_warn {
+  background: var(--warn-soft);
+  color: #b54708;
+  border-color: #fedf89;
+}
+
+.pill_danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: #fecdca;
+}
+
+.pill_brand {
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  border-color: #c7d7fe;
+}
+
+.empty {
+  padding: 26px 22px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  text-align: left;
+}
+
+.emptyWarn {
+  background: var(--warn-soft);
+  border-color: #fedf89;
+}
+
+/* 能力未开通：与空数据（中性）、需要注意（warn）区分开的独立态。 */
+.emptyInfo {
+  background: var(--brand-soft);
+  border-color: #c7d7fe;
+  border-style: solid;
+}
+
+.emptyHint {
+  margin-top: 6px;
+  color: var(--ink-3);
+}
+
+.emptyTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.emptyText {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+  max-width: 82ch;
+}
+
+.emptyActions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.notice {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+}
+
+.noticeText {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.statValue {
+  font-size: 24px;
+  line-height: 1.25;
+  color: var(--ink);
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.statHint {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.definitionRow {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13px;
+}
+
+.definitionRow:last-child {
+  border-bottom: none;
+}
+
+.definitionTerm {
+  color: var(--ink-3);
+}
+
+.definitionValue {
+  color: var(--ink-2);
+  word-break: break-word;
+}

@@ -1,0 +1,44 @@
+# 依赖与构建产物
+node_modules/
+dist/
+# 51 轮为避免覆盖 5338 正在使用的 dist/，分目录构建的 product / strict 产物
+dist-51/
+dist-strict-51/
+# 54 轮同样独立构建，避免覆盖 5338 与 5340
+dist-54/
+# 52 轮独立构建（product 5339 → fixture 5417），避免覆盖其它现场
+dist-52/
+.npm-cache/
+.tmp-npm-cache/
+.npx-cache/
+.pnpm-store/
+
+# 本地环境变量（不得提交，可能含部署地址）
+.env.local
+.env.*.local
+
+# 编辑器 / 系统
+.DS_Store
+*.log
+
+# 测试产物
+coverage/
+
+# 本机临时目录（脚本/安装/构建用的 TMPDIR；Node 编译缓存也落在这里）
+.tmp/
+
+# 浏览器核对的截图与摘要：对真实 13000 的截图含真实业务数据（员工、会话、角色），
+# 只保留在本机，绝不入库；受控/脱敏截图另存到 docs 下的证据目录并标注。
+.shots/
+.native-entries-check/
+# 本机浏览器核对截图（52 轮起，脚本默认输出目录；不入库）
+.work/
+
+# 原生包（@nocobase/logger 等）在导入/构建时按 cwd 写的运行时日志与审计文件：
+# 不是源码，也不含项目数据，但不属于本工程，绝不入库。
+storage/
+
+# 45 轮起的两份分离产物：strict 与 product 必须各自独立、互不覆盖（浏览器端模式是构建期注入），
+# 只在本机用于预览，不入库。
+dist-strict/
+dist-product/

@@ -1,0 +1,363 @@
+/* 通用页面样式：登录页、启动态、错误与无权限页。 */
+
+.boot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 100vh;
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+.bootCompact {
+  min-height: 320px;
+}
+
+.bootSpinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--line-strong);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.centeredCard {
+  width: 100%;
+  max-width: 520px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 28px 30px 26px;
+}
+
+.centeredTitle {
+  font-size: 18px;
+  font-weight: 640;
+  color: var(--ink);
+}
+
+.centeredText {
+  margin-top: 8px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+.centeredActions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--brand);
+  border-radius: var(--radius-sm);
+  background: var(--brand);
+  color: #fff;
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.primaryButton:hover {
+  background: var(--brand-hover);
+  border-color: var(--brand-hover);
+}
+
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 13.5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.secondaryButton:hover {
+  border-color: var(--brand);
+  color: var(--brand-deep);
+}
+
+/* ---------------- 工作台 ---------------- */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gridTwo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+/* 窄屏：统计块改为单列，数值字号收敛，避免长账号名换行挤压。 */
+@media (max-width: 560px) {
+  .statGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .statValue {
+    font-size: 19px;
+  }
+
+  .boardRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .boardRow .secondaryButton {
+    align-self: flex-start;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13px;
+}
+
+.listItem:last-child {
+  border-bottom: none;
+}
+
+.listItemMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.listItemTitle {
+  color: var(--ink);
+  font-weight: 560;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 46ch;
+}
+
+.listItemHint {
+  color: var(--ink-3);
+  font-size: 12px;
+}
+
+.inlineNote {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--warn-soft);
+  border: 1px solid #fedf89;
+  color: #b54708;
+  font-size: 12.5px;
+}
+
+.skeleton {
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eef2f7, #e2e8f0, #eef2f7);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ---------------- 模块占位页 ---------------- */
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.boardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.boardRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+}
+
+.boardRowText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.boardRowTitle {
+  font-size: 13.5px;
+  font-weight: 580;
+  color: var(--ink);
+}
+
+.boardRowDescription {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  max-width: 80ch;
+}
+
+/* ---------------- 账号：修改密码 ---------------- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 420px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.input {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13.5px;
+}
+
+.input:focus {
+  outline: 2px solid var(--brand-soft);
+  outline-offset: 1px;
+  border-color: var(--brand);
+}
+
+.formActions {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12.5px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  color: var(--ink-2);
+}
+
+.alertError {
+  background: var(--warn-soft);
+  border-color: #fedf89;
+  color: #b54708;
+}
+
+.alertOk {
+  background: var(--ok-soft);
+  border-color: #abefc6;
+  color: #067647;
+}
+
+/* ---------------- 工作台：跨页入口 ---------------- */
+
+.entryLink {
+  font-size: 12.5px;
+  color: var(--brand-deep);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.entryLink:hover {
+  text-decoration: underline;
+}
+
+.entryMuted {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* ---------------- 后台信息（PUB-06） ---------------- */
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.backendLogo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+}
+

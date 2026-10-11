@@ -1,0 +1,2193 @@
+{
+  "generatedAt": "2026-10-10T22:01:57.895Z",
+  "tarball": "/Users/chenming/IdeaProjects/crewloom/.worktrees/completion-backend/patches/nocobase-2.2.20/.cache/plugin-ai-2.2.20.tgz",
+  "tarballUrl": "https://registry.npmjs.org/@nocobase/plugin-ai/-/plugin-ai-2.2.20.tgz",
+  "steps": {
+    "pristineSha256": {
+      "package/dist/server/manager/ai-manager.js": "6f62df6a9c228200e64f335d99cfcaac432b3fabc894cd25b7b6c46a8d22ede1",
+      "package/dist/server/workflow/nodes/llm/index.js": "3f3a504412a0cdfb66a2058f29c919ff4b329d28d49c45f0bf0e7379a611803f",
+      "package/dist/ai/tools/sub-agents/dispatch-sub-agent-task.js": "95de43feb1c40c2b0bf9af252ce8c909f9cc1651943acf96ed90f617b23c26d7"
+    },
+    "anchors": [
+      {
+        "id": "A-default-consumption",
+        "hits": 1,
+        "applied": true
+      },
+      {
+        "id": "A-default-resolver",
+        "hits": 1,
+        "applied": true
+      },
+      {
+        "id": "B-llm-node-default",
+        "hits": 1,
+        "applied": true
+      },
+      {
+        "id": "C-sub-agent-explicit-only",
+        "hits": 1,
+        "applied": true
+      },
+      {
+        "id": "C-sub-agent-helper",
+        "hits": 1,
+        "applied": true
+      }
+    ],
+    "patchBytes": 5060,
+    "sourceEvidence": {
+      "llmRegistration": {
+        "package": "@nocobase/plugin-ai@2.2.20",
+        "llmFile": "package/dist/server/workflow/nodes/llm/index.js",
+        "llmFileSha256": "3f3a504412a0cdfb66a2058f29c919ff4b329d28d49c45f0bf0e7379a611803f",
+        "pluginFile": "package/dist/server/plugin.js",
+        "pluginFileSha256": "000a4291b7e1a7ba97883cc3f1d19e06774216d89bc788499b0d9211002359a6",
+        "registerInstructionHits": [
+          {
+            "line": 344,
+            "text": "workflow.registerInstruction(\"llm\", import_llm.LLMInstruction);"
+          }
+        ],
+        "loadStartsAtLine": 172,
+        "installStartsAtLine": 364,
+        "registeredInsideLoad": true
+      }
+    },
+    "runtime": {
+      "ok": true,
+      "manager": [
+        {
+          "id": "D1 默认已配置 → 用默认（不再取首模型）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D2 默认未配置 → 保留旧回退（第一个有启用模型的服务首模型）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D3 默认只配一半 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service and default model must both be configured: the configured default is incomplete",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D4 默认服务不存在 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-x\" is not available: service not found",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D5 默认服务已禁用 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-b\" is not available: service is disabled",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D6 默认模型不在启用列表 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM model \"m-nope\" is not available: model is not enabled on service \"svc-b\"",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D7 合法显式仍优先（不受默认影响）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D8 默认服务没有任何启用模型 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-b\" is not available: service has no enabled models",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        }
+      ],
+      "llmNode": [
+        {
+          "id": "E1 节点未指定服务 → 落全局默认（补丁前不发请求）",
+          "patched": {
+            "llmService": "svc-b",
+            "model": "m-b1",
+            "resolveModelCalls": 1
+          },
+          "pristine": {
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-b",
+            "model": "m-b1",
+            "resolveModelCalls": 1
+          },
+          "expectedPristine": {
+            "resolveModelCalls": 0
+          }
+        },
+        {
+          "id": "E2 节点显式服务 + 显式模型 → 完全不动",
+          "patched": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          }
+        },
+        {
+          "id": "E3 节点显式服务、未显式模型 → 补丁也不补默认模型（不越权改用户配置）",
+          "patched": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          }
+        }
+      ],
+      "subAgent": [
+        {
+          "id": "F1 专用配置已关闭但留有扁平字段 → 传 null（补丁前把整份配置当显式）",
+          "patched": null,
+          "pristine": {
+            "enabled": false,
+            "llmService": "svc-c",
+            "model": "m-c1"
+          },
+          "ok": true,
+          "expectedPatched": null,
+          "expectedPristine": {
+            "enabled": false,
+            "llmService": "svc-c",
+            "model": "m-c1"
+          }
+        },
+        {
+          "id": "F2 专用配置开启且带 models 列表 → 取第一个合法对",
+          "patched": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "pristine": {
+            "enabled": true,
+            "models": [
+              {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              }
+            ]
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expectedPristine": {
+            "enabled": true,
+            "models": [
+              {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "F3 专用配置开启且带扁平合法对 → 作为显式传出",
+          "patched": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "pristine": {
+            "enabled": true,
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expectedPristine": {
+            "enabled": true,
+            "llmService": "svc-b",
+            "model": "m-b1"
+          }
+        },
+        {
+          "id": "F4 专用配置开启但没有可用对 → 传 null",
+          "patched": null,
+          "pristine": {
+            "enabled": true
+          },
+          "ok": true,
+          "expectedPatched": null,
+          "expectedPristine": {
+            "enabled": true
+          }
+        },
+        {
+          "id": "F5 上游显式 model 仍最优先 → 覆盖专用配置",
+          "patched": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          }
+        }
+      ],
+      "employees": [
+        {
+          "id": "G1 员工专用配置关闭 + 遗留扁平字段 → 回退公共解析（关闭的遗留字段不当显式）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        },
+        {
+          "id": "G2 员工专用配置开启 + 显式在允许集内 → 显式优先（默认失效也不影响）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G3 员工专用配置开启 + 显式不在允许集 → 用首选，不越权、不落默认",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G4 员工专用配置开启 + 多允许模型 → 取第一个（首选规则保持）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G5 员工专用配置开启但无可用对 → 明确失败（不被公共默认吞掉）",
+          "patched": {
+            "outcome": "threw",
+            "message": "AI employee model not configured"
+          },
+          "pristine": {
+            "outcome": "threw",
+            "message": "AI employee model not configured"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "threw",
+            "messageIncludes": "AI employee model not configured"
+          },
+          "expectedPristine": {
+            "outcome": "threw",
+            "messageIncludes": "AI employee model not configured"
+          }
+        },
+        {
+          "id": "G6 员工专用配置开启 + 扁平合法对 → 作为允许集第一个",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G7 员工专用配置关闭 + 调用方合法显式 → 显式优先于全局默认",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        },
+        {
+          "id": "G8 员工专用配置关闭 + 默认服务已禁用 → 员工回退同样明确失败",
+          "patched": {
+            "outcome": "threw",
+            "message": "Default LLM service \"svc-b\" is not available: service is disabled"
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "threw",
+            "messageIncludes": "service is disabled"
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        }
+      ],
+      "tailChain": [
+        {
+          "id": "H1 默认已配置 → 出站 provider 收到的就是默认服务（不是第一个服务）",
+          "patched": {
+            "resolved": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-b",
+                "model": "m-b1"
+              },
+              "serviceOptionsTag": "tag-b",
+              "returnedModel": "m-b1",
+              "returnedService": "svc-b",
+              "providerIsInstance": true
+            }
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-b",
+                "model": "m-b1"
+              },
+              "serviceOptionsTag": "tag-b",
+              "returnedModel": "m-b1",
+              "returnedService": "svc-b",
+              "providerIsInstance": true
+            }
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        },
+        {
+          "id": "H2 默认未配置 → 出站仍是旧回退的第一个服务",
+          "patched": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        },
+        {
+          "id": "H3 默认服务已禁用 → 补丁后解析即失败，出站 provider 根本不会被创建（旧版会静默用首个服务）",
+          "patched": {
+            "resolved": null,
+            "threw": "Default LLM service \"svc-b\" is not available: service is disabled",
+            "outbound": null
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": null,
+            "threw": "service is disabled",
+            "outbound": null
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        }
+      ],
+      "lifecycle": [
+        {
+          "id": "I1 设置更新只影响新调用：已解析快照不变，新调用用新默认，每次调用都重新读设置",
+          "observed": {
+            "inflight": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "nextCall": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "inflightStillBoundTo": "svc-b",
+            "settingsReads": 2
+          },
+          "expected": {
+            "inflight": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "nextCall": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "inflightStillBoundTo": "svc-b",
+            "settingsReads": 2
+          },
+          "ok": true
+        },
+        {
+          "id": "I2 设置改成失效：新调用明确失败且不静默切换；已开始的调用仍按已解析结果出站",
+          "observed": {
+            "newCallThrew": "Default LLM service \"svc-x\" is not available: service not found",
+            "inflightStillBoundTo": "svc-c"
+          },
+          "expected": {
+            "newCallThrew": "Default LLM service \"svc-x\" is not available: service not found",
+            "inflightStillBoundTo": "svc-c"
+          },
+          "ok": true
+        },
+        {
+          "id": "I3 清空默认：新调用恢复旧回退（第一个有启用模型的服务首模型）",
+          "observed": {
+            "afterClear": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expected": {
+            "afterClear": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        }
+      ],
+      "pluginBoundary": [
+        {
+          "id": "J1 ai 插件缺失（pm.get(\"ai\") 为 undefined）：补丁分支得到 TypeError 文案，未做防御；原版得到 invalid llm service",
+          "patched": {
+            "threw": false,
+            "status": -2,
+            "result": "Cannot read properties of undefined (reading 'aiManager')"
+          },
+          "pristine": {
+            "threw": false,
+            "status": -2,
+            "result": "invalid llm service"
+          },
+          "ok": true,
+          "note": "该状态在 2.2.20 不可达：llm instruction 由 plugin-ai 自身 load() 注册（见 sourceEvidence.llmRegistration）；不因此新增广泛防御。"
+        }
+      ],
+      "llmNodeRealChain": [
+        {
+          "id": "K1 节点未指定服务 → 真实 getLLMProvider 用默认服务建 provider（原始版拿不到服务）",
+          "patched": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b"
+          },
+          "pristine": {
+            "status": -2,
+            "errorResult": "invalid llm service",
+            "providerCreated": 0,
+            "modelOptions": null,
+            "serviceTag": null
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b"
+          },
+          "expectedPristine": {
+            "providerCreated": 0,
+            "errorResult": "invalid llm service"
+          },
+          "ok": true
+        },
+        {
+          "id": "K2 节点显式服务+模型 → 真实 getLLMProvider 按显式建 provider（两版一致）",
+          "patched": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "pristine": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "ok": true
+        }
+      ],
+      "subAgentRealChain": [
+        {
+          "id": "L1 员工专用配置关闭+遗留扁平字段、无显式 → 真实 dispatcher/EmployeeManager 回退公共默认（原始版用遗留字段）",
+          "patched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "serviceTag": "tag-b",
+            "modelOptions": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-c",
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "L2 调用方合法普通显式 {llmService,model}（员工配置关闭、遗留扁平字段）→ 真实链一路到 provider 且显式生效",
+          "patched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "serviceTag": "tag-a",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "serviceTag": "tag-a",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "serviceTag": "tag-a",
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-a",
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "L3 实际失败场景：默认服务已禁用且员工配置关闭 → 候选明确失败、provider 不创建；原始版静默用遗留字段",
+          "patched": {
+            "providerCreated": 0,
+            "modelOptions": null,
+            "serviceTag": null,
+            "postBoundaryError": "Default LLM service \"svc-b\" is not available: service is disabled"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 0
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-c"
+          },
+          "ok": true
+        }
+      ],
+      "aiSettingsPersistence": [
+        {
+          "id": "M1 真实 update 保存 defaultLLMService/defaultModel → 真实 get 读回，options.storage 保留",
+          "observed": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            },
+            "stored": {
+              "options": {
+                "storage": "local"
+              },
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            }
+          },
+          "expected": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            },
+            "stored": {
+              "options": {
+                "storage": "local"
+              },
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "M2 只保存 defaultModel → defaultLLMService 保持不变（部分更新）",
+          "observed": {
+            "storage": "local",
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b2"
+          },
+          "expected": {
+            "storage": "local",
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b2"
+          },
+          "ok": true
+        },
+        {
+          "id": "M3 额外键合并进 options（storage 更新、默认键不动）",
+          "observed": {
+            "storage": "s3",
+            "extraFlag": true,
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b1"
+          },
+          "expected": {
+            "storage": "s3",
+            "extraFlag": true,
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b1"
+          },
+          "ok": true
+        },
+        {
+          "id": "M4 保存后清空（null）→ 真实 resolveModel 回退旧首个服务（保存→读取→选型贯通）",
+          "observed": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": null,
+              "defaultModel": null
+            },
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expected": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": null,
+              "defaultModel": null
+            },
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "M5 真实保存合法默认 → 真实 resolveModel 选用保存的默认",
+          "observed": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expected": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "ok": true
+        },
+        {
+          "id": "M6 publicGet 只返回 storage（不泄漏默认服务/模型）",
+          "observed": {
+            "storage": "local"
+          },
+          "expected": {
+            "storage": "local"
+          },
+          "ok": true
+        }
+      ],
+      "deps": {
+        "depsRoot": "/Users/chenming/IdeaProjects/crewloom/frontend",
+        "utils": "2.2.20",
+        "utilsPath": "/Users/chenming/IdeaProjects/crewloom/.worktrees/completion-backend/patches/nocobase-2.2.20/.cache/utils-2.2.20/package",
+        "utilsTarball": "/Users/chenming/IdeaProjects/crewloom/.worktrees/completion-backend/patches/nocobase-2.2.20/.cache/utils-2.2.20.tgz",
+        "utilsTarballUrl": "https://registry.npmjs.org/@nocobase/utils/-/utils-2.2.20.tgz",
+        "utilsTarballSha256": "e4ee5cf4706b08d778a149beaa7e8e0d0c3fec80b7884cff1cbeb1c6d7ca48d5",
+        "utilsProvision": {
+          "ok": true,
+          "source": "cached"
+        },
+        "resolved": {
+          "@langchain/core": "1.1.49",
+          "@langchain/langgraph": "1.4.4",
+          "@langchain/langgraph-checkpoint": "1.1.2",
+          "@nocobase/acl": "2.2.22",
+          "@nocobase/ai": "2.2.20-fake",
+          "@nocobase/database": "2.2.20-fake",
+          "@nocobase/plugin-workflow": "2.2.20-fake",
+          "@nocobase/utils": "2.2.20",
+          "axios": "1.20.0",
+          "langchain": "1.2.39",
+          "lodash": "4.17.21",
+          "zod": "4.6.5"
+        }
+      },
+      "cases": [
+        {
+          "id": "D1 默认已配置 → 用默认（不再取首模型）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D2 默认未配置 → 保留旧回退（第一个有启用模型的服务首模型）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D3 默认只配一半 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service and default model must both be configured: the configured default is incomplete",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D4 默认服务不存在 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-x\" is not available: service not found",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D5 默认服务已禁用 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-b\" is not available: service is disabled",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D6 默认模型不在启用列表 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM model \"m-nope\" is not available: model is not enabled on service \"svc-b\"",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "D7 合法显式仍优先（不受默认影响）",
+          "outcome": "resolved",
+          "result": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expected": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "D8 默认服务没有任何启用模型 → 明确失败",
+          "outcome": "threw",
+          "message": "Default LLM service \"svc-b\" is not available: service has no enabled models",
+          "expected": {
+            "outcome": "threw"
+          },
+          "ok": true
+        },
+        {
+          "id": "E1 节点未指定服务 → 落全局默认（补丁前不发请求）",
+          "patched": {
+            "llmService": "svc-b",
+            "model": "m-b1",
+            "resolveModelCalls": 1
+          },
+          "pristine": {
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-b",
+            "model": "m-b1",
+            "resolveModelCalls": 1
+          },
+          "expectedPristine": {
+            "resolveModelCalls": 0
+          }
+        },
+        {
+          "id": "E2 节点显式服务 + 显式模型 → 完全不动",
+          "patched": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "model": "m-x",
+            "resolveModelCalls": 0
+          }
+        },
+        {
+          "id": "E3 节点显式服务、未显式模型 → 补丁也不补默认模型（不越权改用户配置）",
+          "patched": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "resolveModelCalls": 0
+          }
+        },
+        {
+          "id": "F1 专用配置已关闭但留有扁平字段 → 传 null（补丁前把整份配置当显式）",
+          "patched": null,
+          "pristine": {
+            "enabled": false,
+            "llmService": "svc-c",
+            "model": "m-c1"
+          },
+          "ok": true,
+          "expectedPatched": null,
+          "expectedPristine": {
+            "enabled": false,
+            "llmService": "svc-c",
+            "model": "m-c1"
+          }
+        },
+        {
+          "id": "F2 专用配置开启且带 models 列表 → 取第一个合法对",
+          "patched": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "pristine": {
+            "enabled": true,
+            "models": [
+              {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              }
+            ]
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-a",
+            "model": "m-a1"
+          },
+          "expectedPristine": {
+            "enabled": true,
+            "models": [
+              {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "F3 专用配置开启且带扁平合法对 → 作为显式传出",
+          "patched": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "pristine": {
+            "enabled": true,
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expectedPristine": {
+            "enabled": true,
+            "llmService": "svc-b",
+            "model": "m-b1"
+          }
+        },
+        {
+          "id": "F4 专用配置开启但没有可用对 → 传 null",
+          "patched": null,
+          "pristine": {
+            "enabled": true
+          },
+          "ok": true,
+          "expectedPatched": null,
+          "expectedPristine": {
+            "enabled": true
+          }
+        },
+        {
+          "id": "F5 上游显式 model 仍最优先 → 覆盖专用配置",
+          "patched": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "pristine": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          },
+          "expectedPristine": {
+            "llmService": "svc-x",
+            "model": "m-x"
+          }
+        },
+        {
+          "id": "G1 员工专用配置关闭 + 遗留扁平字段 → 回退公共解析（关闭的遗留字段不当显式）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        },
+        {
+          "id": "G2 员工专用配置开启 + 显式在允许集内 → 显式优先（默认失效也不影响）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G3 员工专用配置开启 + 显式不在允许集 → 用首选，不越权、不落默认",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G4 员工专用配置开启 + 多允许模型 → 取第一个（首选规则保持）",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G5 员工专用配置开启但无可用对 → 明确失败（不被公共默认吞掉）",
+          "patched": {
+            "outcome": "threw",
+            "message": "AI employee model not configured"
+          },
+          "pristine": {
+            "outcome": "threw",
+            "message": "AI employee model not configured"
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "threw",
+            "messageIncludes": "AI employee model not configured"
+          },
+          "expectedPristine": {
+            "outcome": "threw",
+            "messageIncludes": "AI employee model not configured"
+          }
+        },
+        {
+          "id": "G6 员工专用配置开启 + 扁平合法对 → 作为允许集第一个",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          }
+        },
+        {
+          "id": "G7 员工专用配置关闭 + 调用方合法显式 → 显式优先于全局默认",
+          "patched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        },
+        {
+          "id": "G8 员工专用配置关闭 + 默认服务已禁用 → 员工回退同样明确失败",
+          "patched": {
+            "outcome": "threw",
+            "message": "Default LLM service \"svc-b\" is not available: service is disabled"
+          },
+          "pristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "outcome": "threw",
+            "messageIncludes": "service is disabled"
+          },
+          "expectedPristine": {
+            "outcome": "resolved",
+            "result": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          }
+        },
+        {
+          "id": "H1 默认已配置 → 出站 provider 收到的就是默认服务（不是第一个服务）",
+          "patched": {
+            "resolved": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-b",
+                "model": "m-b1"
+              },
+              "serviceOptionsTag": "tag-b",
+              "returnedModel": "m-b1",
+              "returnedService": "svc-b",
+              "providerIsInstance": true
+            }
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-b",
+                "model": "m-b1"
+              },
+              "serviceOptionsTag": "tag-b",
+              "returnedModel": "m-b1",
+              "returnedService": "svc-b",
+              "providerIsInstance": true
+            }
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        },
+        {
+          "id": "H2 默认未配置 → 出站仍是旧回退的第一个服务",
+          "patched": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        },
+        {
+          "id": "H3 默认服务已禁用 → 补丁后解析即失败，出站 provider 根本不会被创建（旧版会静默用首个服务）",
+          "patched": {
+            "resolved": null,
+            "threw": "Default LLM service \"svc-b\" is not available: service is disabled",
+            "outbound": null
+          },
+          "pristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          },
+          "ok": true,
+          "expectedPatched": {
+            "resolved": null,
+            "threw": "service is disabled",
+            "outbound": null
+          },
+          "expectedPristine": {
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "outbound": {
+              "providerCreated": 1,
+              "modelOptions": {
+                "llmService": "svc-a",
+                "model": "m-a1"
+              },
+              "serviceOptionsTag": "tag-a",
+              "returnedModel": "m-a1",
+              "returnedService": "svc-a",
+              "providerIsInstance": true
+            }
+          }
+        },
+        {
+          "id": "I1 设置更新只影响新调用：已解析快照不变，新调用用新默认，每次调用都重新读设置",
+          "observed": {
+            "inflight": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "nextCall": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "inflightStillBoundTo": "svc-b",
+            "settingsReads": 2
+          },
+          "expected": {
+            "inflight": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "nextCall": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "inflightStillBoundTo": "svc-b",
+            "settingsReads": 2
+          },
+          "ok": true
+        },
+        {
+          "id": "I2 设置改成失效：新调用明确失败且不静默切换；已开始的调用仍按已解析结果出站",
+          "observed": {
+            "newCallThrew": "Default LLM service \"svc-x\" is not available: service not found",
+            "inflightStillBoundTo": "svc-c"
+          },
+          "expected": {
+            "newCallThrew": "Default LLM service \"svc-x\" is not available: service not found",
+            "inflightStillBoundTo": "svc-c"
+          },
+          "ok": true
+        },
+        {
+          "id": "I3 清空默认：新调用恢复旧回退（第一个有启用模型的服务首模型）",
+          "observed": {
+            "afterClear": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expected": {
+            "afterClear": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "J1 ai 插件缺失（pm.get(\"ai\") 为 undefined）：补丁分支得到 TypeError 文案，未做防御；原版得到 invalid llm service",
+          "patched": {
+            "threw": false,
+            "status": -2,
+            "result": "Cannot read properties of undefined (reading 'aiManager')"
+          },
+          "pristine": {
+            "threw": false,
+            "status": -2,
+            "result": "invalid llm service"
+          },
+          "ok": true,
+          "note": "该状态在 2.2.20 不可达：llm instruction 由 plugin-ai 自身 load() 注册（见 sourceEvidence.llmRegistration）；不因此新增广泛防御。"
+        },
+        {
+          "id": "K1 节点未指定服务 → 真实 getLLMProvider 用默认服务建 provider（原始版拿不到服务）",
+          "patched": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b"
+          },
+          "pristine": {
+            "status": -2,
+            "errorResult": "invalid llm service",
+            "providerCreated": 0,
+            "modelOptions": null,
+            "serviceTag": null
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b"
+          },
+          "expectedPristine": {
+            "providerCreated": 0,
+            "errorResult": "invalid llm service"
+          },
+          "ok": true
+        },
+        {
+          "id": "K2 节点显式服务+模型 → 真实 getLLMProvider 按显式建 provider（两版一致）",
+          "patched": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "pristine": {
+            "status": "pending-at-outbound-boundary",
+            "errorResult": null,
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c"
+          },
+          "ok": true
+        },
+        {
+          "id": "L1 员工专用配置关闭+遗留扁平字段、无显式 → 真实 dispatcher/EmployeeManager 回退公共默认（原始版用遗留字段）",
+          "patched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            },
+            "serviceTag": "tag-b",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "serviceTag": "tag-b",
+            "modelOptions": {
+              "llmService": "svc-b",
+              "model": "m-b1"
+            }
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-c",
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "L2 调用方合法普通显式 {llmService,model}（员工配置关闭、遗留扁平字段）→ 真实链一路到 provider 且显式生效",
+          "patched": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "serviceTag": "tag-a",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            },
+            "serviceTag": "tag-a",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 1,
+            "serviceTag": "tag-a",
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-a",
+            "modelOptions": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "L3 实际失败场景：默认服务已禁用且员工配置关闭 → 候选明确失败、provider 不创建；原始版静默用遗留字段",
+          "patched": {
+            "providerCreated": 0,
+            "modelOptions": null,
+            "serviceTag": null,
+            "postBoundaryError": "Default LLM service \"svc-b\" is not available: service is disabled"
+          },
+          "pristine": {
+            "providerCreated": 1,
+            "modelOptions": {
+              "llmService": "svc-c",
+              "model": "m-c1"
+            },
+            "serviceTag": "tag-c",
+            "postBoundaryError": "Cannot read properties of undefined (reading 'toolsManager')"
+          },
+          "expectedPatched": {
+            "providerCreated": 0
+          },
+          "expectedPristine": {
+            "providerCreated": 1,
+            "serviceTag": "tag-c"
+          },
+          "ok": true
+        },
+        {
+          "id": "M1 真实 update 保存 defaultLLMService/defaultModel → 真实 get 读回，options.storage 保留",
+          "observed": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            },
+            "stored": {
+              "options": {
+                "storage": "local"
+              },
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            }
+          },
+          "expected": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            },
+            "stored": {
+              "options": {
+                "storage": "local"
+              },
+              "defaultLLMService": "svc-b",
+              "defaultModel": "m-b1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "M2 只保存 defaultModel → defaultLLMService 保持不变（部分更新）",
+          "observed": {
+            "storage": "local",
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b2"
+          },
+          "expected": {
+            "storage": "local",
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b2"
+          },
+          "ok": true
+        },
+        {
+          "id": "M3 额外键合并进 options（storage 更新、默认键不动）",
+          "observed": {
+            "storage": "s3",
+            "extraFlag": true,
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b1"
+          },
+          "expected": {
+            "storage": "s3",
+            "extraFlag": true,
+            "defaultLLMService": "svc-b",
+            "defaultModel": "m-b1"
+          },
+          "ok": true
+        },
+        {
+          "id": "M4 保存后清空（null）→ 真实 resolveModel 回退旧首个服务（保存→读取→选型贯通）",
+          "observed": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": null,
+              "defaultModel": null
+            },
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "expected": {
+            "read": {
+              "storage": "local",
+              "defaultLLMService": null,
+              "defaultModel": null
+            },
+            "resolved": {
+              "llmService": "svc-a",
+              "model": "m-a1"
+            }
+          },
+          "ok": true
+        },
+        {
+          "id": "M5 真实保存合法默认 → 真实 resolveModel 选用保存的默认",
+          "observed": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "expected": {
+            "llmService": "svc-b",
+            "model": "m-b1"
+          },
+          "ok": true
+        },
+        {
+          "id": "M6 publicGet 只返回 storage（不泄漏默认服务/模型）",
+          "observed": {
+            "storage": "local"
+          },
+          "expected": {
+            "storage": "local"
+          },
+          "ok": true
+        }
+      ]
+    },
+    "manifest": {
+      "file": "patch-manifest.json",
+      "patchedSha256": {
+        "package/dist/server/manager/ai-manager.js": "e0f9c886df76500ad5d6b87dbc0805128ed9b7f2823a8a852c8a6626a25e2f4a",
+        "package/dist/server/workflow/nodes/llm/index.js": "5f7450130b259282cfe79dd65439e6c5d5ea9aaf23e69710af02d91f126f5707",
+        "package/dist/ai/tools/sub-agents/dispatch-sub-agent-task.js": "77cdad06cdb13e6d88a9be18a7863e57cff19ea903a037e6b5011a1cca98eb58"
+      }
+    }
+  },
+  "tarballSha256": "3fb3be5d60c1c8d92dd36917b85449752c74552f983177a64deb613d3a44d16a",
+  "tarballSha256Matches": true
+}

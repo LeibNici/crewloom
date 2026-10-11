@@ -1,0 +1,50 @@
+--- a/dist/server/middlewares/reset-user-departments-cache.js
++++ b/dist/server/middlewares/reset-user-departments-cache.js
+@@ -30,9 +30,20 @@
+ });
+ module.exports = __toCommonJS(reset_user_departments_cache_exports);
+ const resetUserDepartmentsCache = async (ctx, next) => {
+-  await next();
+   const { associatedName, resourceName, associatedIndex, actionName, values } = ctx.action.params;
+   const cache = ctx.app.cache;
++  const isRoleDepartmentChange = ["add", "remove", "set"].includes(actionName) && (associatedName === "departments" && resourceName === "roles" || associatedName === "roles" && resourceName === "departments");
++  let previousRoleDepartmentIds = [];
++  if (isRoleDepartmentChange && associatedName === "roles" && actionName === "set") {
++    const previousRows = await ctx.db.getRepository("departmentsRoles").find({
++      fields: ["departmentId"],
++      filter: {
++        roleName: associatedIndex
++      }
++    });
++    previousRoleDepartmentIds = previousRows.map((row) => row.get ? row.get("departmentId") : row.departmentId);
++  }
++  await next();
+   if (associatedName === "departments" && resourceName === "members" && ["add", "remove", "set"].includes(actionName) && (values == null ? void 0 : values.length)) {
+     for (const memberId of values) {
+       await cache.del(`departments:${memberId}`);
+@@ -41,6 +52,25 @@
+   if (associatedName === "users" && resourceName === "departments" && ["add", "remove", "set"].includes(actionName)) {
+     await cache.del(`departments:${associatedIndex}`);
+   }
++  if (isRoleDepartmentChange) {
++    const normalizeId = (value) => value && typeof value === "object" ? value.id ?? value.departmentId ?? value : value;
++    const departmentIds = associatedName === "departments" ? [associatedIndex] : [...previousRoleDepartmentIds, ...(values || []).map(normalizeId)];
++    const uniqueIds = [...new Set(departmentIds.filter((id) => id !== null && id !== void 0))];
++    for (const departmentId of uniqueIds) {
++      const members = await ctx.db.getRepository("departmentsUsers").find({
++        fields: ["userId"],
++        filter: {
++          departmentId
++        }
++      });
++      for (const member of members) {
++        const userId = member.get ? member.get("userId") : member.userId;
++        if (userId !== null && userId !== void 0) {
++          await cache.del(`departments:${userId}`);
++        }
++      }
++    }
++  }
+ };
+ // Annotate the CommonJS export names for ESM import in node:
+ 0 && (module.exports = {

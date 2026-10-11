@@ -1,0 +1,2463 @@
+{
+  "generatedAt": "2026-10-10T22:21:42.070Z",
+  "steps": {
+    "tarballs": {
+      "departments": {
+        "sha256": "d5a0f287f8586601c71c15651f7034f30899d579204f1b268ab3932c240bf31a",
+        "expected": "d5a0f287f8586601c71c15651f7034f30899d579204f1b268ab3932c240bf31a",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-departments/-/plugin-departments-2.2.20.tgz"
+      },
+      "acl": {
+        "sha256": "1ae86e0e0ad18e4f855aaf74d35030b961e8654039d959c1f98e1cf98a0b6622",
+        "expected": "1ae86e0e0ad18e4f855aaf74d35030b961e8654039d959c1f98e1cf98a0b6622",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-acl/-/plugin-acl-2.2.20.tgz"
+      },
+      "cache": {
+        "sha256": "830cd389a30b19104eba425d4cf98237faf6ab9da62ec43b875724d651f955fd",
+        "expected": "830cd389a30b19104eba425d4cf98237faf6ab9da62ec43b875724d651f955fd",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/cache/-/cache-2.2.20.tgz"
+      },
+      "database": {
+        "sha256": "123f0c54e6c3f2c887827785ed46ebc59399b9fe1c40dc4dda0b7a0d773f95a2",
+        "expected": "123f0c54e6c3f2c887827785ed46ebc59399b9fe1c40dc4dda0b7a0d773f95a2",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/database/-/database-2.2.20.tgz"
+      },
+      "server": {
+        "sha256": "862c46856facffe01d41da32c5b2fca47ce847f4356b3b704554ba5ee772d19b",
+        "expected": "862c46856facffe01d41da32c5b2fca47ce847f4356b3b704554ba5ee772d19b",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/server/-/server-2.2.20.tgz"
+      },
+      "dataSourceMain": {
+        "sha256": "6985d75cbf10f0c7d2a1f6b19e13fdf4558488b07225728c6f0fe9ae126dd774",
+        "expected": "6985d75cbf10f0c7d2a1f6b19e13fdf4558488b07225728c6f0fe9ae126dd774",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-data-source-main/-/plugin-data-source-main-2.2.20.tgz"
+      }
+    },
+    "pristineSha256": {
+      "package/dist/server/middlewares/reset-user-departments-cache.js": "e0c83d50c248ce8ce1caef11a650d1305c3ca075459b66108b5e66550d1372ca",
+      "package/dist/server/middlewares/set-departments-roles.js": "47a1aeba5a3575e1a44077ffc988c098079fd383b8ca1b9637552b8df34111ab",
+      "package/dist/server/plugin.js": "f2eb7333096e387a19021632a627f9fd9e40c9e4b2f22ad9e791918ff56fed30",
+      "package/dist/server/collections/departments.js": "379fc5e7adfbabdf9fa588f188abfba0ecc0d01679b0b253e29d9ed6cda1a7ff",
+      "package/dist/server/collections/departmentsUsers.js": "10b7e6bb07fb821f51a7630b466236633b4f5e3873dc365e90e1fcb8b67fcce2",
+      "package/dist/server/collections/departmentRoles.js": "3e8d4c8ee587964d24377a058ab0972f48a08a762b29bfa84d994fbfbb38ca93",
+      "package/dist/server/collections/users.js": "441047f647437769a9be95d3acb0c399f471db05602f74196086e054a77e7fd7",
+      "package/dist/server/collections/roles.js": "768a3382ad23a2b7898ea4fc0ab0bae6178edde99b8dcab04cd3a7aaade18938"
+    },
+    "anchors": [
+      {
+        "id": "D-roles-cache-invalidation",
+        "hits": 1,
+        "applied": true
+      }
+    ],
+    "patchBytes": 2500,
+    "frameworkStubs": {
+      "@nocobase/database": "defineCollection/extendCollection 只回传定义本身（读字段清单用）",
+      "@nocobase/utils": "getAuthCookieName/getAuthCookieOptions（cookie 名与选项，不参与角色合并）",
+      "db/cache/ctx": "注入端口（假仓库 + 无 TTL 内存 cache），被测函数为真实发布产物",
+      "linkedDeps": {
+        "lodash": "4.17.21"
+      }
+    },
+    "runtime": {
+      "ok": true,
+      "effectiveRole": [
+        {
+          "id": "E1 自身角色 ∪ 部门角色 → attachRoles 注入并合并去重",
+          "observed": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ],
+            "attachRoles": [
+              "deptA"
+            ],
+            "departments": [
+              1
+            ],
+            "departmentRolePayload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "mainDepartmentResolved": true
+          },
+          "expected": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E2 角色切换：X-Role=member（在合并集合内）→ 生效",
+          "observed": {
+            "currentRole": "member",
+            "currentRoles": [
+              "member"
+            ]
+          },
+          "expected": {
+            "currentRole": "member",
+            "currentRoles": [
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E3 角色切换：X-Role 不属于该用户 → 401 ROLE_NOT_FOUND_FOR_USER",
+          "observed": {
+            "status": 401,
+            "code": "ROLE_NOT_FOUND_FOR_USER"
+          },
+          "expected": {
+            "status": 401,
+            "code": "ROLE_NOT_FOUND_FOR_USER"
+          },
+          "ok": true
+        },
+        {
+          "id": "E4 全局角色模式 only-use-union → currentRole=union，currentRoles=全部合并角色",
+          "observed": {
+            "currentRole": "__union__",
+            "currentRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "currentRole": "__union__",
+            "currentRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E5 全局模式 default + X-Role=union → 落到合并集合第一个",
+          "observed": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ]
+          },
+          "expected": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E6 用户无自身角色、只有部门角色 → 允许进入（插件停用时这里会 401）",
+          "observed": {
+            "currentRole": "deptOnly",
+            "effectiveRoles": [
+              "deptOnly"
+            ]
+          },
+          "expected": {
+            "currentRole": "deptOnly",
+            "effectiveRoles": [
+              "deptOnly"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E7 用户无任何角色（自身与部门都无）→ 401 USER_HAS_NO_ROLES_ERR",
+          "observed": {
+            "status": 401,
+            "code": "USER_HAS_NO_ROLES_ERR"
+          },
+          "expected": {
+            "status": 401,
+            "code": "USER_HAS_NO_ROLES_ERR"
+          },
+          "ok": true
+        },
+        {
+          "id": "E8 自身角色与部门角色同名 → 合并去重（只出现一次）",
+          "observed": {
+            "effectiveRoles": [
+              "member"
+            ],
+            "currentRole": "member"
+          },
+          "expected": {
+            "effectiveRoles": [
+              "member"
+            ],
+            "currentRole": "member"
+          },
+          "ok": true
+        }
+      ],
+      "cache": [
+        {
+          "id": "C0 部门角色变更本身不会让**授权角色**过期：attachRoles 用实时 roles 查询（pristine 也正确）",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true,
+          "expectEffective": "两次都包含 deptB → 授权不依赖那份被缓存的 payload"
+        },
+        {
+          "id": "C1 同一状态重复请求命中缓存（departments 载荷读取计数不增长）",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "dels": 0
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C2 departments/1/roles:add → 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C3 departments/1/roles:remove → 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": []
+            },
+            "effectiveRoles": [
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": []
+            },
+            "effectiveRoles": [
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C4 roles/deptB/departments:add（反方向）→ 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C5 roles/deptA/departments:set（含被移除的旧部门）→ 候选用变更前关系一并失效",
+          "pristine": {
+            "payload": {
+              "2": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "2": [
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "2": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "2": [
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C1b 缓存命中明细：departments 载荷第二次不重读；roles 查询每次实时（授权不缓存）",
+          "observed": {
+            "countsAfterFirst": {
+              "userDepartmentsFind": 1,
+              "rolesFind": 1,
+              "usersRolesFind": 1,
+              "rolesUsersFindOne": 1,
+              "settingsFind": 1,
+              "departmentsUsersFind": 0,
+              "departmentsRolesFind": 0
+            },
+            "countsAfterSecond": {
+              "userDepartmentsFind": 1,
+              "rolesFind": 2,
+              "usersRolesFind": 1,
+              "rolesUsersFindOne": 2,
+              "settingsFind": 1,
+              "departmentsUsersFind": 0,
+              "departmentsRolesFind": 0
+            },
+            "secondRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "departmentsFindUnchanged": true,
+            "rolesFindGrows": true
+          },
+          "ok": true
+        },
+        {
+          "id": "C7 成员变更若**绕过**失效（直接改库）→ 授权角色陈旧（证明缓存的 departmentIds 会门控授权）",
+          "observed": {
+            "departments": [
+              1
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "departments": [
+              1
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C8 成员变更走原生失效中间件 → 授权角色刷新（原生已覆盖成员/用户部门变更）",
+          "observed": {
+            "departments": [
+              2
+            ],
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "expected": {
+            "departments": [
+              2
+            ],
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C6 成员变更（原生已有行为）：members:add → 新成员下次请求拿到部门角色；remove → 撤销",
+          "observed": {
+            "before102": [
+              "member"
+            ],
+            "keysBefore": [
+              "app:systemSettings",
+              "departments:102",
+              "roles:102"
+            ],
+            "afterAdd": [
+              "deptA",
+              "member"
+            ],
+            "afterRemove": [
+              "member"
+            ]
+          },
+          "expected": {
+            "before102": [
+              "member"
+            ],
+            "afterAdd": [
+              "deptA",
+              "member"
+            ],
+            "afterRemove": [
+              "member"
+            ]
+          },
+          "ok": true
+        }
+      ],
+      "isolation": [
+        {
+          "id": "I1 同一部门的两名用户：各自自身角色不同，缓存键与结果不串（无权限扩大）",
+          "observed": {
+            "a": [
+              "deptA",
+              "member"
+            ],
+            "b": [
+              "deptA"
+            ],
+            "cacheKeys": [
+              "app:systemSettings",
+              "departments:101",
+              "departments:102",
+              "roles:101",
+              "roles:102"
+            ]
+          },
+          "expected": {
+            "a": [
+              "deptA",
+              "member"
+            ],
+            "b": [
+              "deptA"
+            ]
+          },
+          "ok": true
+        }
+      ],
+      "inheritance": [
+        {
+          "id": "T1 父部门角色不继承：用户仅在子部门时，attachRoles 只含子部门角色",
+          "observed": {
+            "departments": [
+              11
+            ],
+            "effectiveRoles": [
+              "childRole"
+            ]
+          },
+          "expected": {
+            "departments": [
+              11
+            ],
+            "effectiveRoles": [
+              "childRole"
+            ]
+          },
+          "ok": true,
+          "note": "源码依据：中间件用 users.departments（直接部门）算 departmentIds；parent(recursively=true) 只 append 到返回载荷，不参与角色合并。"
+        },
+        {
+          "id": "T2 用户同时在两个部门 → 两个部门的角色都并入",
+          "observed": {
+            "departments": [
+              1,
+              2
+            ],
+            "effectiveRoles": [
+              "roleA",
+              "roleB"
+            ]
+          },
+          "expected": {
+            "departments": [
+              1,
+              2
+            ],
+            "effectiveRoles": [
+              "roleA",
+              "roleB"
+            ]
+          },
+          "ok": true
+        }
+      ],
+      "memberCrud": [
+        {
+          "id": "M1 有成员时删除部门 → 原生 destroyDepartmentCheck 拒绝（400）",
+          "observed": {
+            "passed": false,
+            "status": 400,
+            "message": "The department has members, please remove them first"
+          },
+          "expected": {
+            "passed": false,
+            "status": 400
+          },
+          "ok": true
+        },
+        {
+          "id": "M2 移除成员后删除部门 → 原生检查放行（成员关系已撤销）",
+          "observed": {
+            "passed": true
+          },
+          "expected": {
+            "passed": true
+          },
+          "ok": true
+        },
+        {
+          "id": "M3 departments:update 带 owners → 原生 setDepartmentOwners 改写 through 表 isOwner 并把 owners 从 values 摘掉",
+          "observed": {
+            "throughState": [
+              {
+                "userId": 101,
+                "departmentId": 1,
+                "isOwner": false
+              },
+              {
+                "userId": 102,
+                "departmentId": 1,
+                "isOwner": true
+              }
+            ],
+            "valuesPassedToNext": {}
+          },
+          "expected": {
+            "throughState": [
+              {
+                "userId": 101,
+                "departmentId": 1,
+                "isOwner": false
+              },
+              {
+                "userId": 102,
+                "departmentId": 1,
+                "isOwner": true
+              }
+            ],
+            "valuesPassedToNextWithoutOwners": true
+          },
+          "ok": true
+        }
+      ],
+      "cases": [
+        {
+          "id": "E1 自身角色 ∪ 部门角色 → attachRoles 注入并合并去重",
+          "observed": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ],
+            "attachRoles": [
+              "deptA"
+            ],
+            "departments": [
+              1
+            ],
+            "departmentRolePayload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "mainDepartmentResolved": true
+          },
+          "expected": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E2 角色切换：X-Role=member（在合并集合内）→ 生效",
+          "observed": {
+            "currentRole": "member",
+            "currentRoles": [
+              "member"
+            ]
+          },
+          "expected": {
+            "currentRole": "member",
+            "currentRoles": [
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E3 角色切换：X-Role 不属于该用户 → 401 ROLE_NOT_FOUND_FOR_USER",
+          "observed": {
+            "status": 401,
+            "code": "ROLE_NOT_FOUND_FOR_USER"
+          },
+          "expected": {
+            "status": 401,
+            "code": "ROLE_NOT_FOUND_FOR_USER"
+          },
+          "ok": true
+        },
+        {
+          "id": "E4 全局角色模式 only-use-union → currentRole=union，currentRoles=全部合并角色",
+          "observed": {
+            "currentRole": "__union__",
+            "currentRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "currentRole": "__union__",
+            "currentRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E5 全局模式 default + X-Role=union → 落到合并集合第一个",
+          "observed": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ]
+          },
+          "expected": {
+            "currentRole": "deptA",
+            "currentRoles": [
+              "deptA"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E6 用户无自身角色、只有部门角色 → 允许进入（插件停用时这里会 401）",
+          "observed": {
+            "currentRole": "deptOnly",
+            "effectiveRoles": [
+              "deptOnly"
+            ]
+          },
+          "expected": {
+            "currentRole": "deptOnly",
+            "effectiveRoles": [
+              "deptOnly"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "E7 用户无任何角色（自身与部门都无）→ 401 USER_HAS_NO_ROLES_ERR",
+          "observed": {
+            "status": 401,
+            "code": "USER_HAS_NO_ROLES_ERR"
+          },
+          "expected": {
+            "status": 401,
+            "code": "USER_HAS_NO_ROLES_ERR"
+          },
+          "ok": true
+        },
+        {
+          "id": "E8 自身角色与部门角色同名 → 合并去重（只出现一次）",
+          "observed": {
+            "effectiveRoles": [
+              "member"
+            ],
+            "currentRole": "member"
+          },
+          "expected": {
+            "effectiveRoles": [
+              "member"
+            ],
+            "currentRole": "member"
+          },
+          "ok": true
+        },
+        {
+          "id": "C0 部门角色变更本身不会让**授权角色**过期：attachRoles 用实时 roles 查询（pristine 也正确）",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true,
+          "expectEffective": "两次都包含 deptB → 授权不依赖那份被缓存的 payload"
+        },
+        {
+          "id": "C1 同一状态重复请求命中缓存（departments 载荷读取计数不增长）",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ],
+            "dels": 0
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C2 departments/1/roles:add → 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C3 departments/1/roles:remove → 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": []
+            },
+            "effectiveRoles": [
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": []
+            },
+            "effectiveRoles": [
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C4 roles/deptB/departments:add（反方向）→ 载荷陈旧（pristine）/ 候选刷新",
+          "pristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "1": [
+                "deptA"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "1": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptA",
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C5 roles/deptA/departments:set（含被移除的旧部门）→ 候选用变更前关系一并失效",
+          "pristine": {
+            "payload": {
+              "2": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ],
+            "dels": 0
+          },
+          "patched": {
+            "payload": {
+              "2": [
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ],
+            "dels": 1
+          },
+          "expectedPristine": {
+            "payload": {
+              "2": [
+                "deptA",
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "expectedPatched": {
+            "payload": {
+              "2": [
+                "deptB"
+              ]
+            },
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C1b 缓存命中明细：departments 载荷第二次不重读；roles 查询每次实时（授权不缓存）",
+          "observed": {
+            "countsAfterFirst": {
+              "userDepartmentsFind": 1,
+              "rolesFind": 1,
+              "usersRolesFind": 1,
+              "rolesUsersFindOne": 1,
+              "settingsFind": 1,
+              "departmentsUsersFind": 0,
+              "departmentsRolesFind": 0
+            },
+            "countsAfterSecond": {
+              "userDepartmentsFind": 1,
+              "rolesFind": 2,
+              "usersRolesFind": 1,
+              "rolesUsersFindOne": 2,
+              "settingsFind": 1,
+              "departmentsUsersFind": 0,
+              "departmentsRolesFind": 0
+            },
+            "secondRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "departmentsFindUnchanged": true,
+            "rolesFindGrows": true
+          },
+          "ok": true
+        },
+        {
+          "id": "C7 成员变更若**绕过**失效（直接改库）→ 授权角色陈旧（证明缓存的 departmentIds 会门控授权）",
+          "observed": {
+            "departments": [
+              1
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "expected": {
+            "departments": [
+              1
+            ],
+            "effectiveRoles": [
+              "deptA",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C8 成员变更走原生失效中间件 → 授权角色刷新（原生已覆盖成员/用户部门变更）",
+          "observed": {
+            "departments": [
+              2
+            ],
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "expected": {
+            "departments": [
+              2
+            ],
+            "effectiveRoles": [
+              "deptB",
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "C6 成员变更（原生已有行为）：members:add → 新成员下次请求拿到部门角色；remove → 撤销",
+          "observed": {
+            "before102": [
+              "member"
+            ],
+            "keysBefore": [
+              "app:systemSettings",
+              "departments:102",
+              "roles:102"
+            ],
+            "afterAdd": [
+              "deptA",
+              "member"
+            ],
+            "afterRemove": [
+              "member"
+            ]
+          },
+          "expected": {
+            "before102": [
+              "member"
+            ],
+            "afterAdd": [
+              "deptA",
+              "member"
+            ],
+            "afterRemove": [
+              "member"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "I1 同一部门的两名用户：各自自身角色不同，缓存键与结果不串（无权限扩大）",
+          "observed": {
+            "a": [
+              "deptA",
+              "member"
+            ],
+            "b": [
+              "deptA"
+            ],
+            "cacheKeys": [
+              "app:systemSettings",
+              "departments:101",
+              "departments:102",
+              "roles:101",
+              "roles:102"
+            ]
+          },
+          "expected": {
+            "a": [
+              "deptA",
+              "member"
+            ],
+            "b": [
+              "deptA"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "T1 父部门角色不继承：用户仅在子部门时，attachRoles 只含子部门角色",
+          "observed": {
+            "departments": [
+              11
+            ],
+            "effectiveRoles": [
+              "childRole"
+            ]
+          },
+          "expected": {
+            "departments": [
+              11
+            ],
+            "effectiveRoles": [
+              "childRole"
+            ]
+          },
+          "ok": true,
+          "note": "源码依据：中间件用 users.departments（直接部门）算 departmentIds；parent(recursively=true) 只 append 到返回载荷，不参与角色合并。"
+        },
+        {
+          "id": "T2 用户同时在两个部门 → 两个部门的角色都并入",
+          "observed": {
+            "departments": [
+              1,
+              2
+            ],
+            "effectiveRoles": [
+              "roleA",
+              "roleB"
+            ]
+          },
+          "expected": {
+            "departments": [
+              1,
+              2
+            ],
+            "effectiveRoles": [
+              "roleA",
+              "roleB"
+            ]
+          },
+          "ok": true
+        },
+        {
+          "id": "M1 有成员时删除部门 → 原生 destroyDepartmentCheck 拒绝（400）",
+          "observed": {
+            "passed": false,
+            "status": 400,
+            "message": "The department has members, please remove them first"
+          },
+          "expected": {
+            "passed": false,
+            "status": 400
+          },
+          "ok": true
+        },
+        {
+          "id": "M2 移除成员后删除部门 → 原生检查放行（成员关系已撤销）",
+          "observed": {
+            "passed": true
+          },
+          "expected": {
+            "passed": true
+          },
+          "ok": true
+        },
+        {
+          "id": "M3 departments:update 带 owners → 原生 setDepartmentOwners 改写 through 表 isOwner 并把 owners 从 values 摘掉",
+          "observed": {
+            "throughState": [
+              {
+                "userId": 101,
+                "departmentId": 1,
+                "isOwner": false
+              },
+              {
+                "userId": 102,
+                "departmentId": 1,
+                "isOwner": true
+              }
+            ],
+            "valuesPassedToNext": {}
+          },
+          "expected": {
+            "throughState": [
+              {
+                "userId": 101,
+                "departmentId": 1,
+                "isOwner": false
+              },
+              {
+                "userId": 102,
+                "departmentId": 1,
+                "isOwner": true
+              }
+            ],
+            "valuesPassedToNextWithoutOwners": true
+          },
+          "ok": true
+        }
+      ]
+    },
+    "sourceEvidence": {
+      "targetVersion": "2.2.20",
+      "pluginState": [
+        {
+          "packageName": "@nocobase/plugin-acl",
+          "version": "2.2.20",
+          "enabled": true,
+          "installed": true,
+          "builtIn": true,
+          "isCompatible": true,
+          "depsCompatible": [
+            {
+              "name": "@nocobase/client",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "antd",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.24.2"
+            },
+            {
+              "name": "react",
+              "result": true,
+              "versionRange": "18.x",
+              "packageVersion": "18.2.0"
+            },
+            {
+              "name": "react-i18next",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.18.6"
+            },
+            {
+              "name": "@formily/shared",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "ahooks",
+              "result": true,
+              "versionRange": "3.x",
+              "packageVersion": "3.7.8"
+            },
+            {
+              "name": "@formily/react",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@ant-design/icons",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.6.1"
+            },
+            {
+              "name": "lodash",
+              "result": true,
+              "versionRange": "4.x",
+              "packageVersion": "4.18.1"
+            },
+            {
+              "name": "@nocobase/utils",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/flow-engine",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/client-v2",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/actions",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/cache",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/database",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/server",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/acl",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/test",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@formily/core",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@formily/antd-v5",
+              "result": true,
+              "versionRange": "1.x",
+              "packageVersion": "1.2.3"
+            },
+            {
+              "name": "antd-style",
+              "result": true,
+              "versionRange": "3.x",
+              "packageVersion": "3.7.1"
+            }
+          ],
+          "removable": false
+        },
+        {
+          "packageName": "@nocobase/plugin-ai",
+          "version": "2.2.20",
+          "enabled": true,
+          "installed": true,
+          "builtIn": true,
+          "isCompatible": false,
+          "depsCompatible": [
+            {
+              "name": "@nocobase/plugin-acl",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-workflow",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/client",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/utils",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/flow-engine",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/client-v2",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/database",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/actions",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-file-manager",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/server",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/ai",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "react",
+              "result": true,
+              "versionRange": "18.x",
+              "packageVersion": "18.2.0"
+            },
+            {
+              "name": "antd",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.24.2"
+            },
+            {
+              "name": "@ant-design/icons",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.6.1"
+            },
+            {
+              "name": "ahooks",
+              "result": true,
+              "versionRange": "3.x",
+              "packageVersion": "3.7.8"
+            },
+            {
+              "name": "lodash",
+              "result": true,
+              "versionRange": "4.x",
+              "packageVersion": "4.18.1"
+            },
+            {
+              "name": "@dnd-kit/sortable",
+              "result": true,
+              "versionRange": "7.x",
+              "packageVersion": "7.0.2"
+            },
+            {
+              "name": "@emotion/css",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.13.0"
+            },
+            {
+              "name": "react-router-dom",
+              "result": true,
+              "versionRange": "6.x",
+              "packageVersion": "6.30.1"
+            },
+            {
+              "name": "@nocobase/cache",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/acl",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/data-source-manager",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/resourcer",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "dayjs",
+              "result": true,
+              "versionRange": "1.x",
+              "packageVersion": "1.11.13"
+            },
+            {
+              "name": "react-dom",
+              "result": true,
+              "versionRange": "18.x",
+              "packageVersion": "18.2.0"
+            },
+            {
+              "name": "@formily/core",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@formily/react",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@dnd-kit/core",
+              "result": true,
+              "versionRange": "6.x",
+              "packageVersion": "6.1.0"
+            },
+            {
+              "name": "axios",
+              "result": false,
+              "versionRange": "1.7.x",
+              "packageVersion": "1.20.0"
+            }
+          ],
+          "removable": false
+        },
+        {
+          "packageName": "@nocobase/plugin-users",
+          "version": "2.2.20",
+          "enabled": true,
+          "installed": true,
+          "builtIn": true,
+          "isCompatible": true,
+          "depsCompatible": [
+            {
+              "name": "@formily/react",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@formily/shared",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "react-i18next",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.18.6"
+            },
+            {
+              "name": "react-router-dom",
+              "result": true,
+              "versionRange": "6.x",
+              "packageVersion": "6.30.1"
+            },
+            {
+              "name": "react",
+              "result": true,
+              "versionRange": "18.x",
+              "packageVersion": "18.2.0"
+            },
+            {
+              "name": "@nocobase/client",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "antd",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.24.2"
+            },
+            {
+              "name": "@formily/core",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@nocobase/plugin-acl",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@emotion/css",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.13.0"
+            },
+            {
+              "name": "@nocobase/utils",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/flow-engine",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/client-v2",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/database",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/server",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-user-data-sync",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-ui-schema-storage",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/logger",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "lodash",
+              "result": true,
+              "versionRange": "4.x",
+              "packageVersion": "4.18.1"
+            },
+            {
+              "name": "ahooks",
+              "result": true,
+              "versionRange": "3.x",
+              "packageVersion": "3.7.8"
+            },
+            {
+              "name": "@ant-design/icons",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.6.1"
+            },
+            {
+              "name": "@nocobase/actions",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "sequelize",
+              "result": true,
+              "versionRange": "6.x",
+              "packageVersion": "6.35.2"
+            }
+          ],
+          "removable": false
+        },
+        {
+          "packageName": "@nocobase/plugin-departments",
+          "version": "2.2.20",
+          "enabled": false,
+          "installed": false,
+          "builtIn": false,
+          "isCompatible": true,
+          "depsCompatible": [
+            {
+              "name": "@nocobase/client",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "react",
+              "result": true,
+              "versionRange": "18.x",
+              "packageVersion": "18.2.0"
+            },
+            {
+              "name": "@formily/react",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@formily/core",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@nocobase/utils",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-acl",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "react-i18next",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.18.6"
+            },
+            {
+              "name": "@nocobase/flow-engine",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/client-v2",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/database",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "lodash",
+              "result": true,
+              "versionRange": "4.x",
+              "packageVersion": "4.18.1"
+            },
+            {
+              "name": "@nocobase/plugin-user-data-sync",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/cache",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/server",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/data-source-manager",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "@nocobase/plugin-error-handler",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            },
+            {
+              "name": "sequelize",
+              "result": true,
+              "versionRange": "6.x",
+              "packageVersion": "6.35.2"
+            },
+            {
+              "name": "antd",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.24.2"
+            },
+            {
+              "name": "@ant-design/icons",
+              "result": true,
+              "versionRange": "5.x",
+              "packageVersion": "5.6.1"
+            },
+            {
+              "name": "@formily/shared",
+              "result": true,
+              "versionRange": "2.x",
+              "packageVersion": "2.3.7"
+            },
+            {
+              "name": "@emotion/css",
+              "result": true,
+              "versionRange": "11.x",
+              "packageVersion": "11.13.0"
+            },
+            {
+              "name": "ahooks",
+              "result": true,
+              "versionRange": "3.x",
+              "packageVersion": "3.7.8"
+            },
+            {
+              "name": "@nocobase/actions",
+              "result": true,
+              "versionRange": "2.2.x",
+              "packageVersion": "2.2.20"
+            }
+          ],
+          "removable": true
+        }
+      ],
+      "realSchema": {
+        "departmentsCollection": {
+          "status": 200,
+          "keys": [
+            "key",
+            "name",
+            "title",
+            "inherit",
+            "hidden",
+            "description",
+            "template",
+            "logging",
+            "view",
+            "tree",
+            "autoGenId",
+            "titleField",
+            "filterTargetKey",
+            "unavailableActions"
+          ],
+          "template": "tree",
+          "titleField": "id",
+          "filterTargetKey": "id",
+          "autoGenId": false,
+          "migrationRules": null
+        },
+        "departmentFields": [
+          {
+            "name": "updatedAt",
+            "type": "date",
+            "interface": "updatedAt",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "createdBy",
+            "type": "belongsTo",
+            "interface": "createdBy",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": "users",
+            "through": null,
+            "foreignKey": "createdById"
+          },
+          {
+            "name": "id",
+            "type": "snowflakeId",
+            "interface": "snowflakeId",
+            "primaryKey": true,
+            "allowNull": false,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "organization_id",
+            "type": "bigInt",
+            "interface": "integer",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "parent",
+            "type": "belongsTo",
+            "interface": "m2o",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": "departments",
+            "through": null,
+            "foreignKey": "parentId"
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "interface": "textarea",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "updatedBy",
+            "type": "belongsTo",
+            "interface": "updatedBy",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": "users",
+            "through": null,
+            "foreignKey": "updatedById"
+          },
+          {
+            "name": "status",
+            "type": "string",
+            "interface": "select",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "name",
+            "type": "string",
+            "interface": "input",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "createdAt",
+            "type": "date",
+            "interface": "createdAt",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "dept_code",
+            "type": "string",
+            "interface": "input",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "children",
+            "type": "hasMany",
+            "interface": "o2m",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": "departments",
+            "through": null,
+            "foreignKey": "parentId"
+          },
+          {
+            "name": "parentId",
+            "type": "bigInt",
+            "interface": "integer",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "organization",
+            "type": "belongsTo",
+            "interface": "m2o",
+            "allowNull": null,
+            "defaultValue": null,
+            "target": "organizations",
+            "through": null,
+            "foreignKey": "organization_id"
+          }
+        ],
+        "structure": {
+          "total": 50,
+          "rootCount": 28,
+          "withParent": 22,
+          "statusCounts": {
+            "active": 50
+          },
+          "hasDeptCode": true,
+          "hasOrganizationId": true,
+          "hasPaperTitle": false,
+          "hasPaperName": true,
+          "idSamplesAreNumericStrings": [
+            "number",
+            "number",
+            "number"
+          ]
+        },
+        "associationProbes": [
+          {
+            "label": "departments/<id>/members:list",
+            "status": 500,
+            "rows": null
+          },
+          {
+            "label": "departments/<id>/roles:list",
+            "status": 500,
+            "rows": null
+          },
+          {
+            "label": "roles/<role>/departments:list",
+            "status": 500,
+            "rows": null
+          },
+          {
+            "label": "users/<id>/departments:list",
+            "status": 500,
+            "rows": null
+          }
+        ]
+      },
+      "pluginSchemaPlan": {
+        "package": "@nocobase/plugin-departments@2.2.20",
+        "departmentsCollection": {
+          "template": "tree",
+          "tree": "adjacency-list",
+          "sortable": true,
+          "migrationRules": [
+            "overwrite"
+          ],
+          "dumpRules": "required",
+          "model": "DepartmentModel"
+        },
+        "departmentsFields": [
+          {
+            "name": "id",
+            "type": "snowflakeId",
+            "primaryKey": true,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "primaryKey": false,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "parentId",
+            "type": "bigInt",
+            "primaryKey": false,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "isLeaf",
+            "type": "boolean",
+            "primaryKey": false,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          },
+          {
+            "name": "parent",
+            "type": "belongsTo",
+            "primaryKey": false,
+            "target": "departments",
+            "through": null,
+            "foreignKey": "parentId"
+          },
+          {
+            "name": "children",
+            "type": "hasMany",
+            "primaryKey": false,
+            "target": "departments",
+            "through": null,
+            "foreignKey": "parentId"
+          },
+          {
+            "name": "members",
+            "type": "belongsToMany",
+            "primaryKey": false,
+            "target": "users",
+            "through": "departmentsUsers",
+            "foreignKey": "departmentId"
+          },
+          {
+            "name": "roles",
+            "type": "belongsToMany",
+            "primaryKey": false,
+            "target": "roles",
+            "through": "departmentsRoles",
+            "foreignKey": "departmentId"
+          },
+          {
+            "name": "owners",
+            "type": "belongsToMany",
+            "primaryKey": false,
+            "target": "users",
+            "through": "departmentsUsers",
+            "foreignKey": "departmentId"
+          }
+        ],
+        "addedFields": [
+          "title",
+          "isLeaf",
+          "members",
+          "roles",
+          "owners"
+        ],
+        "preservedCustomFields": [
+          "updatedAt",
+          "createdBy",
+          "organization_id",
+          "notes",
+          "updatedBy",
+          "status",
+          "name",
+          "createdAt",
+          "dept_code",
+          "organization"
+        ],
+        "usersExtendFields": [
+          {
+            "name": "departments",
+            "type": "belongsToMany",
+            "primaryKey": false,
+            "target": "departments",
+            "through": "departmentsUsers",
+            "foreignKey": "userId"
+          },
+          {
+            "name": "mainDepartment",
+            "type": "belongsTo",
+            "primaryKey": false,
+            "target": "departments",
+            "through": null,
+            "foreignKey": "mainDepartmentId"
+          },
+          {
+            "name": "mainDepartmentId",
+            "type": "bigInt",
+            "primaryKey": false,
+            "target": null,
+            "through": null,
+            "foreignKey": null
+          }
+        ],
+        "rolesExtendFields": [
+          {
+            "name": "departments",
+            "type": "belongsToMany",
+            "primaryKey": false,
+            "target": "departments",
+            "through": "departmentsRoles",
+            "foreignKey": "roleName"
+          }
+        ]
+      },
+      "upstreamFacts": {
+        "cacheDefaultStore": "@nocobase/cache@2.2.20 CacheManager 默认 defaultStore=\"memory\"（max 2000）；cache-manager memory 默认 ttl 0 = 不过期",
+        "collectionSync": "@nocobase/database@2.2.20 Collection.sync() → model.sync({ force:false, alter:{ drop:false } }) —— schema 同步不删额外列",
+        "migrationRulesInterpretation": "发布产物里 migrationRules 只作为 collection 定义元数据随包分发；本轮在 @nocobase/database / @nocobase/server / @nocobase/plugin-data-source-main 的 2.2.20 发布产物中未找到解释它的执行代码 → 列为**需补证据的未知**，安装前必须在隔离实例先试 + 数据库备份。"
+      }
+    },
+    "manifest": {
+      "file": "patch-manifest.json",
+      "patchedSha256": {
+        "package/dist/server/middlewares/reset-user-departments-cache.js": "c2abd4d7c3ce8ebafa424f13fb720761fc5fdf5ad0f3593efc3509fd87b9909c"
+      }
+    }
+  },
+  "deps": {
+    "depsRoot": "/Users/chenming/IdeaProjects/crewloom/frontend"
+  }
+}

@@ -1,0 +1,628 @@
+{
+  "generatedAt": "2026-10-10T22:21:42.956Z",
+  "port": 15439,
+  "database": "crewloom_dept_lab",
+  "steps": {
+    "tarballs": {
+      "acl": {
+        "sha256": "1ae86e0e0ad18e4f855aaf74d35030b961e8654039d959c1f98e1cf98a0b6622",
+        "expected": "1ae86e0e0ad18e4f855aaf74d35030b961e8654039d959c1f98e1cf98a0b6622",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-acl/-/plugin-acl-2.2.20.tgz"
+      },
+      "server": {
+        "sha256": "862c46856facffe01d41da32c5b2fca47ce847f4356b3b704554ba5ee772d19b",
+        "expected": "862c46856facffe01d41da32c5b2fca47ce847f4356b3b704554ba5ee772d19b",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/server/-/server-2.2.20.tgz"
+      },
+      "cache": {
+        "sha256": "830cd389a30b19104eba425d4cf98237faf6ab9da62ec43b875724d651f955fd",
+        "expected": "830cd389a30b19104eba425d4cf98237faf6ab9da62ec43b875724d651f955fd",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/cache/-/cache-2.2.20.tgz"
+      },
+      "fieldSort": {
+        "sha256": "c99ac110e93cd9c4ab64405de8bfc7a1a030d3d5fdd389711fdb0c1a71122a09",
+        "expected": "c99ac110e93cd9c4ab64405de8bfc7a1a030d3d5fdd389711fdb0c1a71122a09",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-field-sort/-/plugin-field-sort-2.2.20.tgz"
+      },
+      "database": {
+        "sha256": "123f0c54e6c3f2c887827785ed46ebc59399b9fe1c40dc4dda0b7a0d773f95a2",
+        "expected": "123f0c54e6c3f2c887827785ed46ebc59399b9fe1c40dc4dda0b7a0d773f95a2",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/database/-/database-2.2.20.tgz"
+      },
+      "dataSourceMain": {
+        "sha256": "6985d75cbf10f0c7d2a1f6b19e13fdf4558488b07225728c6f0fe9ae126dd774",
+        "expected": "6985d75cbf10f0c7d2a1f6b19e13fdf4558488b07225728c6f0fe9ae126dd774",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-data-source-main/-/plugin-data-source-main-2.2.20.tgz"
+      },
+      "departments": {
+        "sha256": "d5a0f287f8586601c71c15651f7034f30899d579204f1b268ab3932c240bf31a",
+        "expected": "d5a0f287f8586601c71c15651f7034f30899d579204f1b268ab3932c240bf31a",
+        "matches": true,
+        "url": "https://registry.npmjs.org/@nocobase/plugin-departments/-/plugin-departments-2.2.20.tgz"
+      }
+    },
+    "customSchemaSource": "live-13000-departments.json（真实字段元数据；数据用合成值）",
+    "migrationRulesAudit": {
+      "scannedRoots": [
+        "database",
+        "server",
+        "dataSourceMain",
+        "departments",
+        "acl",
+        "cache"
+      ],
+      "definitionSites": 15,
+      "nonDefinitionReadSites": [],
+      "conclusion": "在本轮扫描的同版 2.2.20 发布产物（database / server / plugin-data-source-main / plugin-departments / plugin-acl / cache）中，migrationRules 只作为 collection 定义元数据出现，没有任何运行时读取点。",
+      "lifecycleSourceHashes": {
+        "db2cm": {
+          "path": "<candidateDir>/.work/ref/dataSourceMain/package/dist/server/repositories/collection-repository.js",
+          "sha256": "1e5e2ea0ca2b9b02bf115bb8b31a561b31bf51237e02af62b95b832ab3ed6abe"
+        },
+        "db2cmWiring(afterEnablePlugin/afterInstall/afterUpgrade)": {
+          "path": "<candidateDir>/.work/ref/dataSourceMain/package/dist/server/server.js",
+          "sha256": "807789916003d8427bcd188a93365ac1e627607918a6215b3b6947cf1838084c"
+        },
+        "loadCollections(beforeStart)": {
+          "path": "<candidateDir>/.work/ref/dataSourceMain/package/dist/server/server.js",
+          "sha256": "807789916003d8427bcd188a93365ac1e627607918a6215b3b6947cf1838084c"
+        },
+        "CollectionModel.load/loadFields/migrate": {
+          "path": "<candidateDir>/.work/ref/dataSourceMain/package/dist/server/models/collection.js",
+          "sha256": "48c20496ba522a309e14d619a4b0c358e4d35dfc8803057d2f86e434eeb2e851"
+        },
+        "Collection.sync(alter.drop:false)": {
+          "path": "<candidateDir>/.work/pglab/node_modules/@nocobase/database/lib/collection.js",
+          "sha256": "c4c0f6f24cab4ce5d420800cdaae6250e5535d01fa565f80b4ee58a0071072a8"
+        },
+        "Database.collection(replace-by-name)": {
+          "path": "<candidateDir>/.work/pglab/node_modules/@nocobase/database/lib/database.js",
+          "sha256": "6694e6642e818555275acf8bf034a464429a15cf274d0eaa4824929dd139d982"
+        },
+        "CacheManager defaultStore=memory": {
+          "path": "<candidateDir>/.work/ref/cache/package/lib/cache-manager.js",
+          "sha256": "e077d9b374ee92508b2489b98c656eaac5e1c9113ec4a3300ceebd5cdf670c22"
+        }
+      }
+    },
+    "postgres": {
+      "started": true,
+      "alreadyRunning": false
+    },
+    "sortField": {
+      "source": "@nocobase/plugin-field-sort@2.2.20 dist/server/sort-field.js",
+      "dataType": "BIGINT",
+      "registeredAs": "sort"
+    },
+    "backup": {
+      "file": "<candidateDir>/.work/pglab-backup-before.sql",
+      "sha256": "8c60a7005b305af3905f89d65343dc8d130ec90c0c6cdcd5d190c8351b71c988"
+    },
+    "baseline": {
+      "departmentCount": 50,
+      "organizationCount": 1,
+      "rootCount": 28,
+      "childCount": 22,
+      "columns": [
+        "created_at",
+        "dept_code",
+        "id",
+        "name",
+        "notes",
+        "organization_id",
+        "parent_id",
+        "status",
+        "updated_at"
+      ],
+      "pk": [
+        "id"
+      ],
+      "checksum": "4d67154e2384bde2ffe5a62e3ace059d"
+    },
+    "afterEnable": {
+      "departmentCount": 50,
+      "organizationCount": 1,
+      "rootCount": 28,
+      "childCount": 22,
+      "columns": [
+        "created_at",
+        "dept_code",
+        "id",
+        "is_leaf",
+        "name",
+        "notes",
+        "organization_id",
+        "parent_id",
+        "sort",
+        "status",
+        "title",
+        "updated_at"
+      ],
+      "pk": [
+        "id"
+      ],
+      "checksum": "4d67154e2384bde2ffe5a62e3ace059d",
+      "throughTables": [
+        "departments_roles",
+        "departments_users"
+      ],
+      "modelFields": [
+        "children",
+        "dept_code",
+        "id",
+        "isLeaf",
+        "members",
+        "name",
+        "notes",
+        "organization",
+        "organization_id",
+        "owners",
+        "parent",
+        "parentId",
+        "roles",
+        "sort",
+        "status",
+        "title"
+      ]
+    },
+    "db2cm": {
+      "beforeFields": 10,
+      "afterFields": 10,
+      "metadataExists": true,
+      "sameFrom": true,
+      "titleAddedToMetadata": false
+    },
+    "throughCrud": {
+      "departmentResolved": true,
+      "membersAfterAdd": 1,
+      "rolesAfterAdd": 1,
+      "roleReadback": "labDeptRole",
+      "rolesAfterRemove": 0,
+      "membersAfterRemove": 0,
+      "rolesBeforeSet": 2,
+      "rolesAfterSet": "labDeptRole2",
+      "rolesAfterSetCount": 1
+    },
+    "associationFields": {
+      "members": true,
+      "roles": true,
+      "owners": true,
+      "membersTarget": "users",
+      "rolesTarget": "roles",
+      "rolesThrough": "departmentsRoles"
+    },
+    "treeBehaviors": {
+      "afterCreateChild": {
+        "parentIsLeaf": "f",
+        "childIsLeaf": "t"
+      },
+      "childrenOfA": 1,
+      "afterReparent": {
+        "oldParentIsLeaf": "t",
+        "newParentIsLeaf": "f"
+      },
+      "destroyWithChildren": {
+        "status": 400,
+        "message": "The department has sub-departments, please delete them first"
+      },
+      "destroyAfterChildrenRemoved": {
+        "passed": true
+      }
+    },
+    "usersAndMetadataDiff": {
+      "physicalUsersColumns": [
+        "created_at",
+        "id",
+        "main_department_id",
+        "nickname",
+        "updated_at",
+        "username"
+      ],
+      "newTables": [
+        "departments",
+        "departments_roles",
+        "departments_users"
+      ],
+      "metadataCounts": {
+        "collections": 2,
+        "fields": 15
+      },
+      "declaredUserFields": [
+        "departments",
+        "mainDepartment",
+        "mainDepartmentId"
+      ],
+      "parentSource": "plugin-code-definition"
+    },
+    "restored": {
+      "departmentCount": 50,
+      "organizationCount": 1,
+      "columns": [
+        "created_at",
+        "dept_code",
+        "id",
+        "name",
+        "notes",
+        "organization_id",
+        "parent_id",
+        "status",
+        "updated_at"
+      ],
+      "checksum": "4d67154e2384bde2ffe5a62e3ace059d",
+      "throughTables": []
+    },
+    "forcedFailure": {
+      "threw": true,
+      "message": "unsupported field type not-a-real-field-type"
+    },
+    "modelFields": [
+      "children",
+      "dept_code",
+      "id",
+      "isLeaf",
+      "members",
+      "name",
+      "notes",
+      "organization",
+      "organization_id",
+      "owners",
+      "parent",
+      "parentId",
+      "roles",
+      "sort",
+      "status",
+      "title"
+    ]
+  },
+  "results": [
+    {
+      "id": "G1 migrationRules 审计：同版 2.2.20 发布产物中没有任何运行时读取点",
+      "ok": true,
+      "observed": {
+        "nonDefinitionReadSites": []
+      },
+      "expected": {
+        "nonDefinitionReadSites": []
+      }
+    },
+    {
+      "id": "A1 自定义 schema 复现：50 部门（28 root / 22 子）+ 1 组织，真实 metadata→migrate 建表",
+      "ok": true,
+      "observed": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "rootCount": 28,
+        "childCount": 22,
+        "columns": [
+          "created_at",
+          "dept_code",
+          "id",
+          "name",
+          "notes",
+          "organization_id",
+          "parent_id",
+          "status",
+          "updated_at"
+        ],
+        "pk": [
+          "id"
+        ],
+        "checksum": "4d67154e2384bde2ffe5a62e3ace059d"
+      },
+      "expected": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "rootCount": 28,
+        "childCount": 22
+      }
+    },
+    {
+      "id": "B1 安装前 pg_dump 备份成功且可读",
+      "ok": true,
+      "observed": {
+        "file": "/Users/chenming/IdeaProjects/crewloom/.worktrees/completion-backend/patches/nocobase-2.2.20-departments/.work/pglab-backup-before.sql",
+        "sha256": "8c60a7005b305af3905f89d65343dc8d130ec90c0c6cdcd5d190c8351b71c988",
+        "bytes": 17157
+      },
+      "expected": {
+        "exists": true
+      }
+    },
+    {
+      "id": "C1 db2cm 在 metadata 已存在时是 no-op：不新增/不覆盖 collection-manager 里的 departments 字段",
+      "ok": true,
+      "observed": {
+        "beforeFields": 10,
+        "afterFields": 10,
+        "metadataExists": true,
+        "sameFrom": true,
+        "titleAddedToMetadata": false
+      },
+      "expected": {
+        "beforeFields": 10,
+        "afterFields": 10,
+        "titleAddedToMetadata": false
+      }
+    },
+    {
+      "id": "C2 启用后：50/1 行、PK、父子结构与内容校验和完全不变（自定义列保留）",
+      "ok": true,
+      "observed": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "rootCount": 28,
+        "childCount": 22,
+        "checksumEqual": true,
+        "pk": [
+          "id"
+        ],
+        "customColumnsKept": true
+      },
+      "expected": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "rootCount": 28,
+        "childCount": 22,
+        "checksumEqual": true
+      }
+    },
+    {
+      "id": "C3 启用后：插件新增列（title / is_leaf）与 through 表被创建",
+      "ok": true,
+      "observed": {
+        "addedColumns": [
+          "is_leaf",
+          "sort",
+          "title"
+        ],
+        "throughTables": [
+          "departments_roles",
+          "departments_users"
+        ]
+      },
+      "expected": {
+        "addedColumnsIncludes": [
+          "title",
+          "is_leaf"
+        ],
+        "throughTables": [
+          "departments_roles",
+          "departments_users"
+        ]
+      }
+    },
+    {
+      "id": "C4 内存中的 collection 同时包含自定义字段与插件字段（metadata load 合并不重置）",
+      "ok": true,
+      "observed": {
+        "modelFields": [
+          "children",
+          "dept_code",
+          "id",
+          "isLeaf",
+          "members",
+          "name",
+          "notes",
+          "organization",
+          "organization_id",
+          "owners",
+          "parent",
+          "parentId",
+          "roles",
+          "sort",
+          "status",
+          "title"
+        ]
+      },
+      "expected": {
+        "has": [
+          "name",
+          "title",
+          "members"
+        ]
+      }
+    },
+    {
+      "id": "D1 through 表（departments_users / departments_roles）在真实 PG 上 add/remove/set/readback 正常",
+      "ok": true,
+      "observed": {
+        "departmentResolved": true,
+        "membersAfterAdd": 1,
+        "rolesAfterAdd": 1,
+        "roleReadback": "labDeptRole",
+        "rolesAfterRemove": 0,
+        "membersAfterRemove": 0,
+        "rolesBeforeSet": 2,
+        "rolesAfterSet": "labDeptRole2",
+        "rolesAfterSetCount": 1
+      },
+      "expected": {
+        "membersAfterAdd": 1,
+        "rolesAfterAdd": 1,
+        "rolesAfterRemove": 0,
+        "membersAfterRemove": 0
+      }
+    },
+    {
+      "id": "D2 插件关联字段定义（members/roles/owners）在被合并后的 collection 上存在",
+      "ok": true,
+      "observed": {
+        "members": true,
+        "roles": true,
+        "owners": true,
+        "membersTarget": "users",
+        "rolesTarget": "roles",
+        "rolesThrough": "departmentsRoles"
+      },
+      "expected": {
+        "members": true,
+        "roles": true,
+        "membersTarget": "users",
+        "rolesTarget": "roles"
+      }
+    },
+    {
+      "id": "H1 `sort` 用真实 2.2.20 字段类型（@nocobase/plugin-field-sort.SortField，BIGINT），不是同族 shim",
+      "ok": true,
+      "observed": {
+        "fieldClass": "SortField",
+        "dataType": "BIGINT"
+      },
+      "expected": {
+        "fieldClass": "SortField",
+        "dataType": "BIGINT"
+      }
+    },
+    {
+      "id": "H2 合并后 parent/children 的来源（哪一份定义生效）",
+      "ok": true,
+      "observed": {
+        "parentSource": "plugin-code-definition",
+        "pluginDefinition": {
+          "treeParent": true,
+          "onDelete": "CASCADE",
+          "foreignKey": "parentId"
+        },
+        "mergedParent": {
+          "treeParent": true,
+          "onDelete": null,
+          "foreignKey": "parentId",
+          "target": "departments"
+        },
+        "mergedChildren": {
+          "treeChildren": true,
+          "foreignKey": "parentId",
+          "target": "departments"
+        }
+      },
+      "expected": {
+        "note": "treeParent 来自插件代码定义则说明 metadata 合并未覆盖该选项；否则说明 metadata 生效"
+      }
+    },
+    {
+      "id": "H3 既有树策略（真实 DB + 真实中间件）：新建子部门→isLeaf、children 查询、换父、删除约束",
+      "ok": true,
+      "observed": {
+        "afterCreateChild": {
+          "parentIsLeaf": "f",
+          "childIsLeaf": "t"
+        },
+        "childrenOfA": 1,
+        "afterReparent": {
+          "oldParentIsLeaf": "t",
+          "newParentIsLeaf": "f"
+        },
+        "destroyWithChildren": {
+          "status": 400,
+          "message": "The department has sub-departments, please delete them first"
+        },
+        "destroyAfterChildrenRemoved": {
+          "passed": true
+        }
+      },
+      "expected": {
+        "parentIsLeafAfterChild": false,
+        "childrenOfA": 1,
+        "destroyWithChildren": "400",
+        "destroyAfterChildrenRemoved": "passed"
+      }
+    },
+    {
+      "id": "H3b 换父后 isLeaf 按既有策略更新（旧父恢复 leaf、新父成为非 leaf）",
+      "ok": true,
+      "observed": {
+        "oldParentIsLeaf": "t",
+        "newParentIsLeaf": "f"
+      },
+      "expected": {
+        "oldParentIsLeaf": true,
+        "newParentIsLeaf": false
+      }
+    },
+    {
+      "id": "H4 真实安装的准确差异：users 物理列 + 新增表 + collection-manager 行数（不只 3 列 2 表）",
+      "ok": true,
+      "observed": {
+        "physicalUsersColumnsAdded": [
+          "main_department_id"
+        ],
+        "pluginDeclaredUserFields": [
+          "departments",
+          "mainDepartment",
+          "mainDepartmentId"
+        ],
+        "newTables": [
+          "departments",
+          "departments_roles",
+          "departments_users"
+        ],
+        "metadataCounts": {
+          "collections": 2,
+          "fields": 15
+        }
+      },
+      "expected": {
+        "note": "users 新增 main_department_id 物理列 + departments_users/departments_roles 两张表；users.departments 只建 through 关系列"
+      }
+    },
+    {
+      "id": "E1 备份恢复后回到安装前：50/1 行、校验和一致、且没有插件新增列/表",
+      "ok": true,
+      "observed": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "columns": [
+          "created_at",
+          "dept_code",
+          "id",
+          "name",
+          "notes",
+          "organization_id",
+          "parent_id",
+          "status",
+          "updated_at"
+        ],
+        "checksum": "4d67154e2384bde2ffe5a62e3ace059d",
+        "throughTables": []
+      },
+      "expected": {
+        "departmentCount": 50,
+        "organizationCount": 1,
+        "checksumEqual": true,
+        "throughTables": []
+      }
+    },
+    {
+      "id": "F1 停用不清结构：原有 50 部门/1 组织与 through 表仍在（结构回退只能靠备份）",
+      "ok": true,
+      "observed": {
+        "originalRows": 50,
+        "organizations": 1,
+        "throughTables": 2
+      },
+      "expected": {
+        "originalRows": 50,
+        "organizations": 1,
+        "throughTablesKept": true
+      }
+    },
+    {
+      "id": "F2 安装失败路径可检出：非法字段类型导致真实 sync 抛错（不会被当成安装成功）",
+      "ok": true,
+      "observed": {
+        "threw": true,
+        "message": "unsupported field type not-a-real-field-type"
+      },
+      "expected": {
+        "threw": true
+      }
+    }
+  ],
+  "ok": true
+}

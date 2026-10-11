@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TD-02 人工表单 · 本机合成验收环境</title>
+    <!--
+      TD-02 人工表单的本机验收控制页（测试工具，不是产品 UI）。
+      由 scripts/manual-fixture-server.mjs 在 /control 提供；按钮全部是可见的真实点击，
+      验收方在内置浏览器里亲自操作真实页面（登录/列表/表单/动作），这里只负责：
+        · 给出直达真实页面的入口（待处理 / 已处理 / 冲突 / 另一受理人 / 本机刚提交）
+        · 合成账号、当前状态、最近请求与最近合成提交体
+        · 重置合成数据、使旧会话失效（令牌世代 +1）
+      不含任何隐藏注入：不写 localStorage，不改页面状态。
+    -->
+    <style>
+      :root { color-scheme: light; }
+      body { margin: 0; padding: 24px 28px 48px; font: 14px/1.6 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #1f2329; }
+      h1 { font-size: 20px; margin: 0 0 4px; }
+      h2 { font-size: 15px; margin: 28px 0 10px; }
+      .sub { color: #646a73; margin: 0 0 18px; }
+      .card { background: #fff; border: 1px solid #e5e6eb; border-radius: 10px; padding: 16px 18px; margin-bottom: 14px; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #f0f1f3; vertical-align: top; }
+      th { color: #646a73; font-weight: 500; background: #fafbfc; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+      pre { background: #f7f8fa; border: 1px solid #eef0f3; border-radius: 8px; padding: 10px 12px; overflow: auto; max-height: 200px; }
+      button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid #d0d3d9; background: #fff; cursor: pointer; }
+      button.primary { background: #1677ff; border-color: #1677ff; color: #fff; }
+      button.warn { border-color: #ffa39e; color: #cf1322; }
+      button:hover { filter: brightness(0.97); }
+      .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+      .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; background: #eef4ff; color: #1677ff; font-size: 12px; }
+      .muted { color: #8a9099; }
+      .ok { color: #237804; }
+      .bad { color: #cf1322; }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <h1>TD-02 人工处理表单 · 本机合成验收环境</h1>
+    <p class="sub">
+      全部数据都是本机合成数据；fixture 只监听 127.0.0.1，未支持的接口在本机返回 501，不做任何外呼。
+      验收请在<b>真实页面</b>上用内置浏览器亲自填写/选择/点击。
+    </p>
+
+    <div class="card">
+      <div class="row">
+        <span>应用地址：<code id="app-url">—</code></span>
+        <a id="link-login" href="#" target="_blank" rel="noreferrer"><button>打开登录页</button></a>
+        <a id="link-pending" href="#" target="_blank" rel="noreferrer"><button class="primary">打开待办列表（可见入口）</button></a>
+        <button id="refresh">刷新状态</button>
+      </div>
+      <p class="muted" style="margin: 10px 0 0">
+        进入步骤：① 打开登录页 → 用下面任一合成账号登录 → ② 打开待办列表 → ③ 点该行的「填写」/「查看」直达处理表单
+        → ④ 亲自填写、选择关联、点处理动作观察结果。也可直接用下面的「打开表单」按钮直达。
+      </p>
+    </div>
+
+    <h2>合成账号（公开、非真实 13000 账号；口令只在 127.0.0.1 生效）</h2>
+    <div class="card">
+      <table id="accounts"><thead><tr><th>账号</th><th>口令</th><th>说明</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <h2>任务入口（按钮为真实页面跳转）</h2>
+    <div class="card">
+      <table id="tasks"><thead><tr><th>场景</th><th>id</th><th>说明</th><th>操作</th></tr></thead><tbody></tbody></table>
+    </div>
+
+    <h2>状态与合成写入</h2>
+    <div class="grid2">
+      <div class="card">
+        <div class="row" style="margin-bottom: 10px">
+          <span class="pill">令牌世代 epoch = <b id="epoch">—</b></span>
+          <button id="epoch-bump" class="warn">使旧会话失效（epoch + 1）</button>
+          <button id="reset">重置合成数据</button>
+          <button id="reset-all" class="warn">重置数据并重新登录</button>
+          <button id="resolve-conflict">标记冲突任务已处理</button>
+        </div>
+        <div>合成任务当前状态（提交成功会真的把原任务改成"已处理"；重置恢复）：</div>
+        <pre id="task-states">（无）</pre>
+        <div>最近一次合成提交（真实页面按钮写出来的）：</div>
+        <pre id="submitted">（还没有提交）</pre>
+        <div class="muted" id="submitted-at"></div>
+      </div>
+      <div class="card">
+        <div>本机未支持而被拒绝的接口（只本机 501，不外呼）：</div>
+        <pre id="unsupported">（无）</pre>
+      </div>
+    </div>
+
+    <h2>最近请求（本机 fixture 收到）</h2>
+    <div class="card"><pre id="requests">（无）</pre></div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      let appUrl = '';
+
+      function render(state) {
+        appUrl = state.appUrl;
+        $('app-url').textContent = state.appUrl;
+        $('link-login').href = state.appUrl + '/login';
+        $('link-pending').href = state.appUrl + '/tasks/pending';
+        $('epoch').textContent = String(state.epoch);
+
+        $('accounts').querySelector('tbody').innerHTML = state.accounts
+          .map((a) => `<tr><td><code>${a.email}</code></td><td><code>${a.password}</code></td><td>${a.nickname} — ${a.note}</td></tr>`)
+          .join('');
+
+        $('tasks').querySelector('tbody').innerHTML = state.tasks
+          .map(
+            (t) => `<tr><td>${t.label}</td><td><code>${t.id}</code></td><td>${t.note}</td><td><a href="${state.appUrl}/tasks/manual?id=${t.id}" target="_blank" rel="noreferrer"><button>打开表单</button></a></td></tr>`,
+          )
+          .join('');
+
+        $('submitted').textContent = state.submitted ? JSON.stringify(state.submitted, null, 2) : '（还没有提交）';
+        $('submitted-at').textContent = state.submittedAt ? `提交时间：${state.submittedAt}` : '';
+        $('task-states').textContent = (state.taskStates || []).length
+          ? state.taskStates
+              .map((t) => `id=${t.id}  userId=${t.userId}  ${t.processed ? '已处理' : '待处理'}${t.hasResult ? '（有结果）' : ''}`)
+              .join('\n')
+          : '（无）';
+        $('unsupported').textContent = state.unsupported.length ? state.unsupported.join('\n') : '（无）';
+        $('requests').textContent = state.requests.length
+          ? state.requests.map((r) => `${r.at}  ${r.method} ${r.action} -> ${r.code}`).join('\n')
+          : '（无）';
+      }
+
+      async function load() {
+        const response = await fetch('/control/state', { cache: 'no-store' });
+        render(await response.json());
+      }
+
+      async function post(path) {
+        const response = await fetch(path, { method: 'POST' });
+        render(await response.json());
+      }
+
+      $('refresh').onclick = load;
+      $('reset').onclick = () => post('/control/reset');
+      $('reset-all').onclick = () => post('/control/reset-all');
+      $('epoch-bump').onclick = () => post('/control/epoch');
+      $('resolve-conflict').onclick = () => post('/control/resolve-conflict');
+      load();
+      setInterval(load, 5000);
+    </script>
+  </body>
+</html>

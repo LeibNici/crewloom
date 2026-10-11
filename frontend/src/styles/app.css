@@ -1,0 +1,28 @@
+/* 全局（非 CSS Module）基础样式；组件样式在各 *.module.css 中。 */
+
+body {
+  min-width: 320px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

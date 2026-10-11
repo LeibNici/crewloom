@@ -1,0 +1,25 @@
+{
+  "module": "tasks",
+  "owner": "组 C（WF + TD）",
+  "readActions": [
+    "workflowManualTasks:listMine",
+    "workflowManualTasks:get",
+    "workflowCcTasks:listMine",
+    "workflowCcTasks:get",
+    "aiWorkflowTasks:list",
+    "aiWorkflowTasks:getBySession",
+    "aiWorkflowTasks:unreadCount",
+    "userWorkflowTasks:listMine",
+    "userWorkflowTaskStats:listMine",
+    "availableActions:list"
+  ],
+  "productActions": [
+    "workflowManualTasks:submit",
+    "workflowCcTasks:read",
+    "workflowCcTasks:readAll",
+    "workflowCcTasks:unread",
+    "aiWorkflowTasks:accept",
+    "aiWorkflowTasks:reject"
+  ],
+  "notes": "人工待办提交、抄送已读与 AI 任务认领/终止都是真实用户动作；strict 模式一律拦截（它们会推进流程）。AI 审核的“批准/修改”走会话工具决策（aiConversations:updateUserDecision + resumeToolCall），属组 A 的 ai 分片：本组只在相邻需求中登记，不在本分片放行。"
+}

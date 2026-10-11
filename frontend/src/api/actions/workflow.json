@@ -1,0 +1,35 @@
+{
+  "module": "workflow",
+  "owner": "组 C（WF + TD）",
+  "readActions": [
+    "workflows:get",
+    "workflows:list",
+    "workflowCategories:list",
+    "flow_nodes:list",
+    "flow_nodes:get",
+    "executions:list",
+    "executions:get",
+    "jobs:list",
+    "jobs:get",
+    "pm:list"
+  ],
+  "productActions": [
+    "workflows:create",
+    "workflows:update",
+    "workflows:destroy",
+    "workflows:revision",
+    "workflows.nodes:create",
+    "flow_nodes:update",
+    "flow_nodes:move",
+    "flow_nodes:duplicate",
+    "flow_nodes:destroyBranch",
+    "flow_nodes:destroy",
+    "flow_nodes:test",
+    "executions:cancel",
+    "executions:destroy",
+    "workflowCategories:create",
+    "workflowCategories:update",
+    "workflowCategories:destroy"
+  ],
+  "notes": "flow_nodes:test 会真实执行节点，executions:cancel/destroy 会改变运行状态：strict 模式硬拦（同时命中 strictDenyActions 与 strictDenyActionPatterns），只在受控环境或真实用户操作时执行。2.2.20 实测：读取某流程的节点请用 flow_nodes:list 加 filter={\"workflowId\":N} 或 /api/workflows/<id>/nodes:list；flow_nodes 没有 create 动作，新增节点走 workflows/<id>/nodes:create（编排页已提供新增节点入口，见 05-group-c.md）。pm:list 是**只读**的已安装/已启用插件清单（GET，无写副作用），本轮用于核对目标 13000 当前 enabled 的工作流节点插件与 instruction 类型矩阵（不返回任何插件配置值），见 scripts/verify-workflow-instruction-matrix.mjs；它放在 workflow 分片是因为该只读核对只服务工作流节点能力矩阵，不改变其它模块的放行范围。"
+}

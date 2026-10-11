@@ -1,0 +1,547 @@
+/* 工作流与待办模块的页面样式（组 C 独占；不改公共 src/styles/**）。 */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.metaText {
+  color: var(--text-muted, #64748b);
+  font-size: 13px;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.mutedText {
+  margin: 0;
+  color: var(--text-muted, #64748b);
+  font-size: 14px;
+}
+
+.successText {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ecfdf3;
+  color: #027a48;
+  font-size: 14px;
+}
+
+.errorText {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef3f2;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.warnText {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fffaeb;
+  color: #b54708;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* 筛选与表单 */
+
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.fieldLabel {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.textarea {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text, #1f2937);
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* 按钮 */
+
+.primaryButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand, #2563eb);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dangerButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #d92d20;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dangerButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.linkButton,
+.dangerLinkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.linkButton {
+  color: var(--brand, #2563eb);
+}
+
+.dangerLinkButton {
+  color: #b42318;
+}
+
+.linkButton:disabled,
+.dangerLinkButton:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* 表格 */
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line, #eef2f7);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cellTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cellHint {
+  display: block;
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.rowLink {
+  color: var(--brand, #2563eb);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 编排顺序 */
+
+.canvasList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.canvasNode {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--line, #eef2f7);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.canvasNodeIndex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #eef4ff;
+  color: var(--brand, #2563eb);
+  font-size: 13px;
+  flex: none;
+}
+
+.canvasNodeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.canvasNodeHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.canvasNodeTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #1f2937);
+}
+
+/* 执行详情 */
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jobItem {
+  padding: 12px;
+  border: 1px solid var(--line, #eef2f7);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.jobHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.jobIndex {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+.jobTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.jsonDetails {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.jsonDetails summary {
+  cursor: pointer;
+  color: var(--brand, #2563eb);
+}
+
+.jsonBlock {
+  margin: 8px 0 0;
+  padding: 10px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 待办 */
+
+.sourceGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sourceTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sourceTab {
+  padding: 6px 12px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sourceTabActive {
+  border-color: var(--brand, #2563eb);
+  background: #eef4ff;
+  color: var(--brand, #2563eb);
+}
+
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 4px;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statLabel {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text, #1f2937);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.requiredMark {
+  color: #b42318;
+  margin-left: 4px;
+}
+
+.fieldError {
+  color: #b42318;
+  font-size: 12px;
+}
+
+.detailGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 节点配置表单 */
+
+.kvList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kvRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.kvKey {
+  min-width: 140px;
+  font-size: 13px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text-muted, #64748b);
+}
+
+.listChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 999px;
+  font-size: 13px;
+  background: #fff;
+}
+
+.conditionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conditionItem {
+  padding: 10px 12px;
+  border: 1px solid var(--line, #eef2f7);
+  border-radius: 10px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conditionHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.canvasMount {
+  min-height: 420px;
+  border: 1px dashed var(--line, #dbe3ec);
+  border-radius: 10px;
+  background: #fcfdff;
+}
+
+/*
+ * 原生画布容器：上游画布页自己声明 `height: 100dvh`，所以容器必须给出确定高度并允许滚动，
+ * 否则节点区会被压成 0 高或把整页撑破。
+ */
+.canvasNative {
+  height: min(78vh, 860px);
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.canvasNative > * {
+  height: 100%;
+}
+
+/*
+ * 390 级窄屏：原生配置抽屉按固定 50% 宽打开，页脚里「测试执行 / 取消 / 提交」会横向溢出，
+ * 实测「提交」的 bbox 落在 x=392（视口外），保存动作点不到。这里只在窄屏把**本产品挂载的
+ * 原生抽屉**占满可用宽度并允许页脚换行；不影响桌面布局，也不改上游源码。
+ */
+@media (max-width: 768px) {
+  .canvasNative :global(.ant-drawer-content-wrapper) {
+    width: 100% !important;
+    max-width: 100vw;
+  }
+
+  .canvasNative :global(.ant-drawer-footer) {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-inline: 8px;
+  }
+
+  .canvasNative :global(.ant-drawer-footer > div) {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+.canvasMountHidden {
+  /* 未接入时容器不占位，但必须真实存在于 DOM 中作为挂载点。 */
+  display: none;
+}

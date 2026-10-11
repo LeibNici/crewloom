@@ -1,0 +1,23 @@
+{
+  "name": "@nocobase/utils",
+  "version": "2.2.22-crewloom-shim",
+  "private": true,
+  "description": "Crewloom 最小适配包：只提供 @nocobase/sdk 发布产物实际使用的 getAuthCookieName / getAuthCookieValue。",
+  "main": "client.cjs",
+  "types": "client.d.ts",
+  "exports": {
+    ".": {
+      "types": "./client.d.ts",
+      "import": "./client.js",
+      "require": "./client.cjs",
+      "default": "./client.js"
+    },
+    "./client": {
+      "types": "./client.d.ts",
+      "import": "./client.js",
+      "require": "./client.cjs",
+      "default": "./client.js"
+    }
+  },
+  "module": "client.js"
+}

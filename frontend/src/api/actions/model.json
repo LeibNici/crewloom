@@ -1,0 +1,24 @@
+{
+  "module": "model",
+  "owner": "组 A（AI + LM）",
+  "readActions": [
+    "llmServices:list",
+    "llmServices:get",
+    "aiSettings:get",
+    "ai:listLLMProviders",
+    "ai:listLLMServices"
+  ],
+  "readPostActions": [
+    "ai:listAllEnabledModels"
+  ],
+  "productActions": [
+    "llmServices:create",
+    "llmServices:update",
+    "llmServices:destroy",
+    "aiSettings:update",
+    "ai:listModels",
+    "ai:listProviderModels",
+    "ai:testFlight"
+  ],
+  "notes": "ai:listModels / ai:listProviderModels / ai:testFlight 会外呼模型提供方（试飞还会产生费用），只在真实用户主动操作时调用；strict 模式在 strictDenyActions 中硬拦。ai:listAllEnabledModels 只读**配置**：固定 2.2.20 的服务端实现是 `db.getRepository('llmServices').find({sort})` 过滤 enabled 后 `toEnabledLLMService()`，其中 `new Provider({app})` 不带 modelOptions（不会建 chatModel），`isToolConflict()` 是本地常量返回，不查询提供方、不推理；原生 AIConfigRepository 用 `apiClient.resource('ai').listAllEnabledModels()` 触发，SDK 对非 get/list 的动作固定用 POST，因此登记在 readPostActions（strict 只读放行 POST，写入动作仍默认拦截）。llmServices:list|get 返回明文 options，仅供管理编辑在授权下读取，界面不得回显 apiKey/baseURL。"
+}

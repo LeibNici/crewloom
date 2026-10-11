@@ -1,0 +1,56 @@
+# Crewloom 仓库忽略规则
+#
+# 原则：只提交必要代码、锁文件、测试与可分享文档；
+# 凭据、真实环境文件、业务数据、依赖缓存与构建产物一律不进入版本库。
+
+# ---- 凭据与本地环境（绝不提交） ----
+.secrets/
+.env
+.env.local
+.env.*.local
+
+# ---- 依赖与构建产物 ----
+node_modules/
+dist/
+.pnpm-store/
+.npm-cache/
+.tmp-npm-cache/
+.npx-cache/
+coverage/
+*.tsbuildinfo
+
+# 根目录 build/ 为实验/上游源码的 esbuild 产物（在 experiments 下有对应来源与副本）
+/build/
+
+# ---- 需先脱敏的既有报告 ----
+# docs/deployment/backend-250.md 第 58 行引用了 13000 旧实例的默认账号口令。
+# 文件保留在磁盘；脱敏（删去该账号/口令）后才可纳入版本库，期间不得提交。
+/docs/deployment/backend-250.md
+
+# ---- 本地并发工作树（四个页面实施组的隔离目录） ----
+# 每个工作树是完整检出；不忽略会被根仓库当作未跟踪文件递归扫到。
+/.worktrees/
+
+# ---- 编辑器 / 系统 / 日志 ----
+.DS_Store
+*.log
+# 例外：验收证据目录里的检查日志是**可分享证据**（命令与退出码），组报告直接链接它们。
+!docs/acceptance/**/*.log
+
+# ---- 本地数据库与上传目录（如意外在仓库内生成） ----
+*.sqlite
+*.sqlite3
+*.db
+storage/uploads/
+storage/db/
+
+# 2.2.20 后端候选的工作目录与本地缓存：
+# - .work/ 是每次核对的解包与补丁中间产物（可由 tools/ 脚本重建）
+# - .cache/ 是 17MB 的 npm 发布包，不入库（README 记录了来源 URL 与 sha256）
+/patches/nocobase-2.2.20/.work/
+/patches/nocobase-2.2.20/.cache/
+
+# Main 内置浏览器的正式验收产物（本机保留，不入 Git；正式隐私门禁仍按全历史扫描，
+# 不依赖忽略规则掩盖任何已跟踪材料）
+/.work/main-browser-acceptance/
+/.work/private-acceptance/

@@ -1,0 +1,428 @@
+/* 任务与待办模块的页面样式（组 C 独占；与 workflow.module.css 分开维护，避免跨模块耦合）。 */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.metaText {
+  color: var(--text-muted, #64748b);
+  font-size: 13px;
+}
+
+.bodyText {
+  margin: 0;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.mutedText {
+  margin: 0;
+  color: var(--text-muted, #64748b);
+  font-size: 14px;
+}
+
+.successText {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #ecfdf3;
+  color: #027a48;
+  font-size: 14px;
+}
+
+.errorText {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fef3f2;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.warnText {
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fffaeb;
+  color: #b54708;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.fieldLabel {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+.unknownHint {
+  color: #b54708;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+.input,
+.select,
+.textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.textarea {
+  width: 100%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text, #1f2937);
+}
+
+.multiSelect {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.primaryButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--brand, #2563eb);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primaryButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.secondaryButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.dangerButton {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #d92d20;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dangerButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.linkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--brand, #2563eb);
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line, #eef2f7);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.cellTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cellHint {
+  display: block;
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.tagRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.sourceTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sourceTab {
+  padding: 6px 12px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text, #1f2937);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.sourceTabActive {
+  border-color: var(--brand, #2563eb);
+  background: #eef4ff;
+  color: var(--brand, #2563eb);
+}
+
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.statBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statLabel {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text, #1f2937);
+}
+
+.formBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.requiredMark {
+  color: #b42318;
+  margin-left: 4px;
+}
+
+.fieldError {
+  color: #b42318;
+  font-size: 12px;
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jobItem {
+  padding: 12px;
+  border: 1px solid var(--line, #eef2f7);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.jobHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.jobTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.jsonDetails {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.jsonDetails summary {
+  cursor: pointer;
+  color: var(--brand, #2563eb);
+}
+
+.jsonBlock {
+  margin: 8px 0 0;
+  padding: 10px;
+  max-height: 320px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.boardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.boardRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line, #eef2f7);
+  border-radius: 10px;
+}
+
+.boardRowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.boardRowTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text, #1f2937);
+}
+
+.boardRowDescription {
+  color: var(--text-muted, #64748b);
+  font-size: 12px;
+}
+
+/* TD-02 真实 Formily schema 宿主的布局容器 */
+.sectionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line, #dbe3ec);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.gridRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.gridCol {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--line, #dbe3ec);
+  margin: 6px 0;
+}
+
+/*
+ * 真实原生表单（`@nocobase/client` `SchemaComponent` 链）的外层容器。
+ *
+ * NocoBase 的 `.nb-grid-container` 用负外边距抵消 `.nb-grid-col` 的 12px 内边距，
+ * 在没有等效内边距的容器里会把内容撑出 24px（390px 视口实测 scrollWidth=414）。
+ * 这里补上同一档 12px 内边距，让栅格与外层对齐、窄屏不再横向溢出。
+ */
+.nativeFormSurface {
+  padding-left: 12px;
+  padding-right: 12px;
+  min-width: 0;
+}

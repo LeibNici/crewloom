@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crewloom 本机合成聊天验收环境 · 控制页</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font: 14px/1.55 -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: #16202c; background: #f5f7fa; }
+      header { background: #16202c; color: #fff; padding: 16px 22px; }
+      header h1 { margin: 0 0 4px; font-size: 17px; }
+      header p { margin: 0; font-size: 12px; color: #b8c4d4; }
+      main { padding: 16px 22px 60px; max-width: 1280px; }
+      section { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+      h2 { margin: 0 0 10px; font-size: 15px; }
+      h3 { margin: 14px 0 6px; font-size: 13px; color: #475569; }
+      table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+      th, td { border-bottom: 1px solid #edf1f6; padding: 5px 7px; text-align: left; vertical-align: top; }
+      th { color: #64748b; font-weight: 600; background: #fafbfd; }
+      code { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+      button, select, input { font: inherit; }
+      button { background: #1d4ed8; color: #fff; border: 0; border-radius: 6px; padding: 5px 11px; cursor: pointer; font-size: 12.5px; margin: 0 4px 4px 0; }
+      button.ghost { background: #eef2f7; color: #1e293b; }
+      button.warn { background: #b45309; }
+      button.danger { background: #b91c1c; }
+      button:disabled { opacity: .5; cursor: not-allowed; }
+      .row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+      .kv { font-size: 12.5px; color: #334155; }
+      .kv b { color: #0f172a; }
+      .pill { display: inline-block; border-radius: 999px; padding: 1px 9px; font-size: 11.5px; background: #e2e8f0; color: #334155; }
+      .pill.ok { background: #dcfce7; color: #166534; }
+      .pill.warn { background: #fef3c7; color: #92400e; }
+      .pill.bad { background: #fee2e2; color: #991b1b; }
+      .muted { color: #64748b; font-size: 12px; }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .scroll { max-height: 300px; overflow: auto; }
+      .note { background: #f8fafc; border-left: 3px solid #94a3b8; padding: 8px 10px; font-size: 12.5px; color: #334155; }
+      ol.steps { margin: 6px 0 0 18px; padding: 0; font-size: 12.5px; }
+      ol.steps li { margin-bottom: 3px; }
+      @media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Crewloom 本机合成聊天验收环境 · 控制页</h1>
+      <p>
+        本页是<strong>测试工具</strong>，不是产品界面。所有按钮只操作第 1 区显示的本机合成后端；
+        本进程不对外发起任何请求，未支持的接口只在本机 501。
+      </p>
+    </header>
+    <main>
+      <section>
+        <h2>1. 环境与入口</h2>
+        <div class="row">
+          <span class="kv">本机合成后端：<b id="serverUrl">-</b></span>
+          <span class="kv">产品预览：<b id="appUrl">-</b></span>
+          <span class="kv">令牌世代（会话）：<b id="tokenEpoch">-</b></span>
+          <span class="kv">角色世代：<b id="roleEpoch">-</b></span>
+          <span class="kv">生效角色：<b id="activeRole">-</b></span>
+        </div>
+        <h3>产品入口（新标签打开，均为真实产品页面）</h3>
+        <div class="row">
+          <button data-open="/login">登录页</button>
+          <button data-open="/workbench">工作台</button>
+          <button data-open="/ai/conversations">会话（原生 ChatBox）</button>
+          <button data-open="/ai/context">上下文工作区</button>
+          <button data-open="/tasks/pending">待处理（含 AI 来源）</button>
+          <button data-open="/tasks/ai" id="openAiTask">AI 任务详情（TD-03）</button>
+          <button data-open="/tasks/manual?id=7">人工待办（TD-02，合成 id=7）</button>
+        </div>
+        <h3>合成账号（公开 fixture，仅在本机合成后端有效）</h3>
+        <table id="accounts"></table>
+        <p class="muted" id="accountNote"></p>
+      </section>
+
+      <section>
+        <h2>2. 角色切换与角色世代</h2>
+        <div class="note">
+          候选角色来自 <code>auth:check.data.roles</code>（两种合成角色）。在产品右上角账号菜单里切换角色，
+          客户端会带 <code>X-Role</code> 重新请求 <code>roles:check</code>；本机按请求角色回显，并推进<strong>角色世代</strong>。
+          切换角色<strong>不清令牌</strong>（不需要重新登录），这是与"会话失效"的关键区别。
+        </div>
+        <table id="roles"></table>
+        <div class="row" style="margin-top:8px">
+          <button class="ghost" id="roleEpochBtn">角色世代 +1（不踢登录）</button>
+          <label class="kv"><input type="checkbox" id="guardToggle" /> 角色世代写保护（旧世代下的工具决定/续跑在本机被拒绝并留证据）</label>
+        </div>
+      </section>
+
+      <section>
+        <h2>3. 失效注入（during-stream / during-tool）</h2>
+        <div class="note">
+          真实分支（源码固定）：<br />
+          ① <code>401 + ROLE_NOT_FOUND_FOR_USER</code> → 角色失效：保留登录、清角色选择、重读
+          <code>auth:check</code>+<code>roles:check</code>，<strong>不跳登录页</strong>；<br />
+          ② 其它 401（如 <code>EXPIRED_TOKEN</code>）→ 会话失效：清会话并回到 <code>/login</code>。<br />
+          <strong>只有走产品请求管线的动作会广播全局副作用</strong>；原生工具卡是 SDK 直连，401 只显示卡片文案。
+          因此"运行中工具失效"请用 <code>/tasks/ai</code>（AI 任务页的"提交决定 / 继续执行"走产品管线）。
+        </div>
+        <div class="row">
+          <label class="kv">动作
+            <select id="injectAction">
+              <option value="aiConversations:updateUserDecision">aiConversations:updateUserDecision（工具决定）</option>
+              <option value="aiConversations:resumeToolCall">aiConversations:resumeToolCall（第二步继续）</option>
+              <option value="roles:check">roles:check（流式中的下一笔只读请求）</option>
+              <option value="aiConversations:list">aiConversations:list（流式中的下一笔只读请求）</option>
+              <option value="*">*（任意动作，谨慎）</option>
+            </select>
+          </label>
+          <label class="kv">方式
+            <select id="injectMode">
+              <option value="role">角色失效（401 ROLE_NOT_FOUND_FOR_USER）</option>
+              <option value="session">会话失效（401 EXPIRED_TOKEN）</option>
+            </select>
+          </label>
+          <label class="kv">次数 <input type="number" id="injectRemaining" value="1" style="width:70px" /></label>
+          <button class="warn" id="injectBtn">生效</button>
+          <button class="ghost" id="injectClearBtn">关闭注入</button>
+          <span class="kv">当前：<b id="injectState">关闭</b></span>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <button class="ghost" id="tokenEpochBtn">令牌世代 +1（旧令牌 401，需要重新登录）</button>
+          <button class="ghost" id="resetBtn">重置合成数据（提交/日志/上传）</button>
+          <button class="danger" id="resetAllBtn">重置全部 + 令牌世代 +1</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>4. 本机场景标识（只在本页给出测试文本，不出现在日常产品界面）</h2>
+        <table id="scenarios"></table>
+      </section>
+
+      <section>
+        <h2>5. 会话流与缓存（drop / 停止 / 续流）</h2>
+        <div class="note">
+          <strong>Main 可直接操作的步骤</strong>
+          <ol class="steps">
+            <li>会话输入区发送 <code>[[drop]]</code>：外置连接被<strong>真实切断</strong>（服务端 res.destroy，不是干净的 stream_end）。预期：已收到的文字保留，并出现中文断线说明；不会一直停在“正在生成”。</li>
+            <li>发送 <code>[[slow]]</code>，看到“第 1 段…”后立刻点“停止”：预期是<strong>正常终态</strong>（不是普通失败提示），且历史里只有<strong>已经生成</strong>的分段。</li>
+            <li>再发送 <code>[[slow]]</code>，生成中<strong>离开并重新打开该会话</strong>（或刷新页面后重新进入）：预期走 cacheReplay，从缓存位置续上剩余分段。</li>
+            <li>发送 <code>[[nocache]]</code>，生成中重开该会话：真实语义是「服务端仍在后台工作」（收到 <code>chunks_cache_missing</code>，界面显示“在后台工作中/点击刷新”），<strong>不是</strong>假错误。等控制页该会话从 <code>streaming</code> 变 <code>idle</code>（后台生成已落库）后，点界面的“刷新”即可读到完整内容，loading 自然结束。</li>
+            <li>流进行中在右上角账号菜单<strong>切换角色</strong>：不需要重新登录；<code>roles:check</code> 按新角色重读并推进角色世代。工具决定/续跑的角色失效（401 ROLE_NOT_FOUND_FOR_USER）与会话失效（401 EXPIRED_TOKEN）用第 3 区分开注入。</li>
+          </ol>
+        </div>
+        <h3>受控会话流状态</h3>
+        <table id="streams"></table>
+        <h3>最近流事件（drop / 停止 / 落库 / 续流 / 工具计划）</h3>
+        <div class="scroll"><table id="streamEvents"></table></div>
+      </section>
+
+      <section>
+        <h2>6. 附件（aiFiles 本机上传）</h2>
+        <div class="row">
+          <button data-open-server="/control/fixture-attachment.txt">下载合成测试文件 synthetic-note.txt</button>
+          <span class="muted">在会话输入区用附件按钮上传这个文件；本机只把它写进本进程内存，不外呼、不落真实存储。</span>
+        </div>
+        <h3>本机已收到的上传</h3>
+        <table id="uploads"></table>
+      </section>
+
+      <section>
+        <h2>7. TD-03 AI 任务（冷启动）</h2>
+        <div class="note">
+          "准备 / 重置"会用<strong>受控中间件真实创建</strong>一个会话（<code>[[tools]]</code>：3 条前端工具调用），
+          不预置工具状态、不预置续跑结果。产品路径：fresh 标签 → <code>/login</code> → <code>/tasks/pending</code>
+          （AI 来源）→ 任务详情 → <strong>领取</strong>（认领，不是批准）→ 逐条批准/拒绝 →
+          <strong>继续执行</strong>（第二步才真正跑 <code>resumeToolCall</code>）。
+        </div>
+        <div class="row">
+          <span class="kv">任务 id：<b id="td03TaskId">-</b></span>
+          <span class="kv">会话：<b id="td03Session">-</b></span>
+          <span class="kv">状态：<b id="td03Status">-</b></span>
+          <span class="kv">受理人：<b id="td03Accepted">-</b></span>
+          <span class="kv">代码工作区 uid：<b id="td03CodeBlockUid">-</b></span>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <label class="kv">播种时带入的代码工作区 block uid：
+            <input id="td03CodeUid" style="width:320px" value="crewloom:code-workspace" />
+          </label>
+          <span class="kv">（AI-04 代码工作区保存后的真实 uid；留空则用中间件默认的 controlled uid，会得到真实 unavailable 错误）</span>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <button id="td03Seed">准备 / 重新播种（待领取）</button>
+          <button class="ghost" data-td03="pending_acceptance">重置为待领取</button>
+          <button class="ghost" data-td03="pending_approval">重置为待决策</button>
+          <button class="ghost" data-td03="rejected">重置为已终止</button>
+          <button data-open="" id="openTd03">打开这条 AI 任务</button>
+        </div>
+        <div class="kv" style="margin-top:8px">
+          领取 <b id="td03AcceptCount">0</b> 次 · 逐条决定
+          <b id="td03DecisionCount">0</b> 次（最近一次：<code id="td03LastDecision">-</code>） · 继续执行
+          <b id="td03ResumeCount">0</b> 次 · 最近一次回传结果：
+          <code id="td03LastResume">-</code>
+        </div>
+        <h3>任务动作记录（本机真实 POST）</h3>
+        <table id="td03History"></table>
+      </section>
+
+      <section>
+        <h2>8. 受控中间件证据（同一个真实中间件实例）</h2>
+        <div class="row">
+          <button class="ghost" id="refreshBtn">刷新本页数据</button>
+          <span class="kv">中间件证据条数：<b id="mwEntries">0</b></span>
+          <span class="kv">放行到本机的请求：<b id="mwProxied">0</b></span>
+          <span class="kv">被中间件拦下的写：<b id="mwBlocked">0</b></span>
+        </div>
+        <h3>受控会话</h3>
+        <table id="mwSessions"></table>
+        <h3>最近中间件事件（场景 / 工具决定 / 继续执行 / 上传）</h3>
+        <div class="scroll"><table id="mwEvents"></table></div>
+      </section>
+
+      <section>
+        <h2>9. 最近请求（含角色与角色世代，用于可见的世代隔离核对）</h2>
+        <div class="scroll"><table id="requests"></table></div>
+      </section>
+
+      <section>
+        <h2>10. 本机拒绝的外呼动作（403，不是空成功）</h2>
+        <table id="denied"></table>
+        <h3>未支持的动作（本机 501，绝不外呼）</h3>
+        <div class="scroll"><table id="unsupported"></table></div>
+      </section>
+
+      <section>
+        <h2>11. 本机合成数据一览</h2>
+        <table id="synthetic"></table>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const esc = (value) => String(value ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const table = (el, head, rows) => {
+        el.innerHTML =
+          '<thead><tr>' + head.map((h) => `<th>${esc(h)}</th>`).join('') + '</tr></thead><tbody>' +
+          (rows.length ? rows.map((r) => '<tr>' + r.map((c) => `<td>${c}</td>`).join('') + '</tr>').join('')
+                       : `<tr><td colspan="${head.length}" class="muted">（空）</td></tr>`) +
+          '</tbody>';
+      };
+      const post = async (path, body) => {
+        const response = await fetch(path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body ?? {}) });
+        return response.json();
+      };
+      let state = null;
+      let appUrl = 'http://127.0.0.1:5327';
+
+      function openLinks() {
+        document.querySelectorAll('[data-open]').forEach((button) => {
+          button.onclick = () => {
+            const path = button.getAttribute('data-open');
+            if (!path) return;
+            window.open(appUrl + path, '_blank', 'noopener');
+          };
+        });
+        // 只属于本机合成后端的文件/入口：必须打到 5418 自己，不能前缀产品地址。
+        document.querySelectorAll('[data-open-server]').forEach((button) => {
+          button.onclick = () => {
+            const path = button.getAttribute('data-open-server');
+            const origin = (state && state.serverUrl) || location.origin;
+            if (path) window.open(origin + path, '_blank', 'noopener');
+          };
+        });
+      }
+
+      function render() {
+        if (!state) return;
+        appUrl = state.appUrl || appUrl;
+        $('serverUrl').textContent = state.serverUrl;
+        $('appUrl').textContent = state.appUrl;
+        $('tokenEpoch').textContent = state.tokenEpoch;
+        $('roleEpoch').textContent = state.roleEpoch;
+        $('activeRole').textContent = state.activeRole;
+        $('guardToggle').checked = state.roleEpochGuard === true;
+        $('injectState').textContent = state.inject?.mode
+          ? `${state.inject.mode} @ ${state.inject.action ?? '任意动作'}（剩余 ${state.inject.remaining === -1 ? '持续' : state.inject.remaining}）`
+          : '关闭';
+
+        table($('accounts'), ['账号', '口令', '身份'], state.accounts.map((a) => [`<code>${esc(a.email)}</code>`, `<code>${esc(a.password)}</code>`, esc(a.nickname)]));
+        $('accountNote').textContent = state.accounts.map((a) => a.note).join('；');
+
+        table($('roles'), ['角色名', '标题', '当前'], state.roles.map((r) => [`<code>${esc(r.name)}</code>`, esc(r.title), r.name === state.activeRole ? '<span class="pill ok">生效</span>' : '']));
+
+        table($('scenarios'), ['场景', '在产品会话里发送的文本', '说明'], state.scenarios.map((s) => [
+          `<code>${esc(s.key)}</code>`,
+          s.text === s.key ? '<span class="muted">普通消息（无标识）</span>' : `<code>${esc(s.text)}</code>`,
+          esc(s.note),
+        ]));
+
+        table($('streams'), ['会话', 'llmActiveState', '增量缓存', '已生成 / 计划', '生成状态', '代码工作区 uid'], (state.streams ?? []).map((s) => [
+          `<code>${esc(s.sessionId)}</code>`,
+          `<span class="pill ${s.llmActiveState === 'streaming' ? 'warn' : 'ok'}">${esc(s.llmActiveState)}</span>`,
+          s.cached === null ? '<span class="muted">-</span>' : s.cached ? '<span class="pill ok">可回放</span>' : '<span class="pill bad">不可回放</span>',
+          `${s.emitted} / ${s.total}`,
+          s.done ? '<span class="pill ok">已完成</span>' : s.stopped ? '<span class="pill warn">已停止</span>' : '<span class="pill">进行中</span>',
+          s.codeUid ? `<code>${esc(s.codeUid)}</code>` : '<span class="muted">-</span>',
+        ]));
+        table($('streamEvents'), ['时间', '事件', '细节'], (state.streamEvents ?? []).map((e) => [
+          esc(String(e.at).slice(11, 19)), `<code>${esc(e.kind)}</code>`,
+          esc(JSON.stringify(Object.fromEntries(Object.entries(e).filter(([k]) => !['at', 'kind', 'seq'].includes(k))))),
+        ]));
+
+        table($('uploads'), ['文件名', '字节', 'sha256', '时间'], (state.uploads ?? []).map((u) => [esc(u.filename), u.bytes, `<code>${esc(u.sha256.slice(0, 16))}…</code>`, esc(u.at)]));
+
+        const td = state.td03;
+        $('td03TaskId').textContent = td.taskId;
+        $('td03Session').textContent = td.sessionId ?? '（尚未播种）';
+        $('td03Status').textContent = td.status;
+        $('td03Accepted').textContent = td.acceptedUserId ?? '（未领取）';
+        $('td03CodeBlockUid').textContent = td.codeBlockUid ?? '（默认 controlled uid）';
+        $('td03AcceptCount').textContent = td.acceptCount;
+        $('td03DecisionCount').textContent = td.decisionCount;
+        $('td03LastDecision').textContent = td.lastDecision ? JSON.stringify(td.lastDecision) : '-';
+        $('td03ResumeCount').textContent = td.resumeCount;
+        $('td03LastResume').textContent = td.lastResumeToolCallResults ? JSON.stringify(td.lastResumeToolCallResults) : '-';
+        $('openTd03').setAttribute('data-open', td.taskUrl ? td.taskUrl.replace(appUrl, '') : '/tasks/pending');
+        table($('td03History'), ['时间', '动作', '细节'], (td.history ?? []).map((h) => [esc(h.at), `<code>${esc(h.kind)}</code>`, esc(JSON.stringify({ ...h, at: undefined, kind: undefined }))]));
+
+        table($('requests'), ['时间', '方法', '动作', 'X-Role', '角色世代', '状态', '备注'], (state.requests ?? []).map((r) => [
+          esc(String(r.at).slice(11, 19)), esc(r.method), `<code>${esc(r.action)}</code>`, esc(r.role ?? '-'), r.roleEpoch ?? '-',
+          `<span class="pill ${r.code >= 400 ? 'bad' : 'ok'}">${r.code}</span>`, esc(r.note ?? ''),
+        ]));
+
+        table($('denied'), ['时间', '动作', '本机拒绝原因'], (state.denied ?? []).map((d) => [esc(String(d.at).slice(11, 19)), `<code>${esc(d.action)}</code>`, esc(d.reason)]));
+        table($('unsupported'), ['本机未支持的请求'], (state.unsupported ?? []).map((u) => [`<code>${esc(u)}</code>`]));
+
+        const syn = state.synthetic;
+        table($('synthetic'), ['类别', '本机合成内容'], [
+          ['合成员工', syn.employees.map((e) => `${esc(e.nickname)}（<code>${esc(e.username)}</code>）`).join('、')],
+          ['模型服务（仅配置）', syn.llmServices.map((s) => `${esc(s.title)} / <code>${esc(s.provider)}</code>`).join('、')],
+          ['数据源', syn.dataSources.map((s) => `${esc(s.displayName)}（<code>${esc(s.key)}</code>）`).join('、')],
+          ['集合与记录', syn.collections.map((c) => `${esc(c.name)}（${c.records} 行）`).join('、')],
+          ['角色', syn.roles.map((r) => `${esc(r.name)}＝${esc(r.title)}`).join('、')],
+        ]);
+      }
+
+      async function refresh() {
+        state = await (await fetch('/control/state')).json();
+        render();
+        try {
+          const log = await (await fetch('/__crewloom/controlled-log')).json();
+          $('mwEntries').textContent = log.entries?.length ?? 0;
+          $('mwProxied').textContent = log.counts?.proxied ?? 0;
+          $('mwBlocked').textContent = (log.entries ?? []).filter((e) => e.kind === 'blocked-write').length;
+          const events = (log.entries ?? []).slice(-40).reverse();
+          table($('mwEvents'), ['时间', '事件', '细节'], events.map((e) => [
+            esc(String(e.at).slice(11, 19)), `<code>${esc(e.kind)}</code>`,
+            esc(JSON.stringify(Object.fromEntries(Object.entries(e).filter(([k]) => !['at', 'kind', 'seq'].includes(k))))),
+          ]));
+          const sessions = await (await fetch('/__crewloom/controlled-sessions')).json();
+          table($('mwSessions'), ['会话', '标题', 'llmActiveState'], (sessions.sessions ?? []).map((s) => [`<code>${esc(s.sessionId)}</code>`, esc(s.title), esc(s.llmActiveState)]));
+        } catch (error) {
+          $('mwEntries').textContent = '读取失败';
+        }
+      }
+
+      $('refreshBtn').onclick = refresh;
+      $('roleEpochBtn').onclick = async () => { await post('/control/role-epoch'); refresh(); };
+      $('tokenEpochBtn').onclick = async () => { await post('/control/token-epoch'); refresh(); };
+      $('resetBtn').onclick = async () => { await post('/control/reset'); refresh(); };
+      $('resetAllBtn').onclick = async () => { await post('/control/reset-all'); refresh(); };
+      $('injectBtn').onclick = async () => {
+        await post('/control/inject', { action: $('injectAction').value, mode: $('injectMode').value, remaining: Number($('injectRemaining').value) });
+        refresh();
+      };
+      $('injectClearBtn').onclick = async () => { await post('/control/inject', { mode: null }); refresh(); };
+      $('guardToggle').onchange = async () => { await post('/control/role-epoch-guard', { enabled: $('guardToggle').checked }); refresh(); };
+      $('td03Seed').onclick = async () => { await post('/control/td03/seed', { status: 'pending_acceptance', codeBlockUid: $('td03CodeUid').value }); refresh(); };
+      document.querySelectorAll('[data-td03]').forEach((button) => {
+        button.onclick = async () => { await post('/control/td03/reset', { status: button.getAttribute('data-td03'), codeBlockUid: $('td03CodeUid').value }); refresh(); };
+      });
+
+      openLinks();
+      refresh();
+      setInterval(refresh, 5000);
+    </script>
+  </body>
+</html>

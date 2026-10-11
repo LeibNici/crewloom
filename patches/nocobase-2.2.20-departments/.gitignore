@@ -1,0 +1,8 @@
+# 2.2.20 部门候选的本地工作目录与缓存（不入库）：
+# - .work/ 是每次核对的解包 / fixture 中间产物（可由 tools/ 脚本重建）
+# - .cache/ 是 npm 发布包缓存（README 记录来源 URL 与 sha256）
+.work/
+.cache/
+
+# NocoBase logger/audit 在本目录下生成的默认日志目录（lab 运行副产物）
+storage/

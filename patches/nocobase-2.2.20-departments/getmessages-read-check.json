@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-10-10T22:43:04.825Z",
+  "source": {
+    "actionFile": "node_modules/@nocobase/plugin-ai/dist/server/resource/aiConversations.js",
+    "actionSha256": "a5d5dc3d2a8d22350037a14157b86f9b7c8162cd6eca526db377babe0afd4db1",
+    "managerFile": "node_modules/@nocobase/plugin-ai/dist/server/ai-employees/ai-conversations.js",
+    "managerSha256": "6cf4db3ffd10047935628b0da562ae800f0acadf0f456ec0381dbcca57f8bee7",
+    "actionBranchSource": "const updateRead = originalUpdateRead === \"true\" || originalUpdateRead === true;",
+    "managerBranchSource": null
+  },
+  "branches": [
+    {
+      "label": "缺参（missing）",
+      "updateReadParam": "<missing>",
+      "computedUpdateRead": false,
+      "repoUpdateCount": 0,
+      "thrown": "data.filter is not a function"
+    },
+    {
+      "label": "显式 'false'",
+      "updateReadParam": "false",
+      "computedUpdateRead": false,
+      "repoUpdateCount": 0,
+      "thrown": "data.filter is not a function"
+    },
+    {
+      "label": "显式 'true'",
+      "updateReadParam": "true",
+      "computedUpdateRead": true,
+      "repoUpdateCount": 1,
+      "thrown": "data.filter is not a function"
+    }
+  ],
+  "ok": true,
+  "actual": {
+    "missingRepoUpdateCount": 0,
+    "falseRepoUpdateCount": 0,
+    "trueRepoUpdateCount": 1
+  }
+}

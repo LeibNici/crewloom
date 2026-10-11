@@ -1,0 +1,2 @@
+# 浏览器冒烟产物（截图含真实业务标题）：只在本组目录内忽略，不改公共 frontend/.gitignore。
+.artifacts/

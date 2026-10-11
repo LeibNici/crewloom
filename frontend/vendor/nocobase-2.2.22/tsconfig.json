@@ -1,0 +1,22 @@
+{
+  "//": [
+    "宿主侧的编译选项（**不是**上游文件），只作用于 vendor/nocobase-2.2.22/ 这棵固定源码树。",
+    "为什么需要：上游仓库根的 tsconfig.json 通过 extends 指向 tsconfig.paths.json，那份文件不在我们复制的子集里；",
+    "而 esbuild 的 tsconfck 会从被转换文件向上查找最近的 tsconfig.json。放在这里可以：",
+    " (1) 给固定源码单独一套编译语义，不改变产品 src/ 的 tsconfig.app.json；",
+    " (2) 让 dev 侧 esbuild 正确处理 TS 旧式装饰器与自动 JSX 运行时。",
+    "useDefineForClassFields=false 与上游运行语义一致（装饰器 + 类字段需要赋值语义）。",
+    "注意：node scripts/vendor-native-client-v2-source.mjs 会重建本目录，本文件需要重新放回。"
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "jsx": "react-jsx",
+    "useDefineForClassFields": false,
+    "experimentalDecorators": true,
+    "verbatimModuleSyntax": false,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowJs": true
+  }
+}
